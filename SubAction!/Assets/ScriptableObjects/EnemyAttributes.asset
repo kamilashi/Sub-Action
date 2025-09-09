@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 647bb53852e9b7d41bfcca48ac4039fc, type: 3}
-  m_Name: PlayerAttributes
+  m_Name: EnemyAttributes
   m_EditorClassIdentifier: 
   movement:
     acceleration: 30
@@ -18,6 +18,6 @@ MonoBehaviour:
     aimSpeed: 20
     maxSpeed: 10
   health:
-    maxHealth: 20
+    maxHealth: 0
   visualizer:
-    mainColor: {r: 0.29903883, g: 0.64123565, b: 0.9056604, a: 1}
+    mainColor: {r: 0, g: 0, b: 0, a: 0}

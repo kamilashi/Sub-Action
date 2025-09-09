@@ -9,12 +9,14 @@ public class InputHandler : MonoBehaviour
 {
     // if there is ever a multiplayer these must be changed to member events
     public static UnityEvent<Vector2> onMoveInput = new UnityEvent<Vector2>();
+    public static UnityEvent<Vector2> onAimInput = new UnityEvent<Vector2>();
     public static UnityEvent onStopMoveInput = new UnityEvent();
     public static UnityEvent onPrimaryAction = new UnityEvent();
     public static UnityEvent onSecondaryAction = new UnityEvent();
     public static UnityEvent onSpecialAction = new UnityEvent();
 
-    public Vector2 lastInput;
+    public Vector2 lastMoveInput;
+    public Vector2 lastAimInput;
 
     void Start()
     {
@@ -51,13 +53,13 @@ public class InputHandler : MonoBehaviour
             newInput = newInput.normalized;
             onMoveInput?.Invoke(newInput);
         }
-        else if (lastInput.sqrMagnitude > 0)
+        else if (lastMoveInput.sqrMagnitude > 0)
         {
             newInput = newInput.normalized;
             onStopMoveInput?.Invoke();
         }
 
-        lastInput = newInput;
+        lastMoveInput = newInput;
 
         Mouse mouse = Mouse.current;
         if (mouse.leftButton.isPressed)
@@ -73,6 +75,20 @@ public class InputHandler : MonoBehaviour
         if (keyboard.leftShiftKey.isPressed)
         {
             onSpecialAction?.Invoke();
+        }
+
+        //if(keyboard.leftAltKey.isPressed)
+        {
+            Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
+            Vector2 aimDir = mouse.position.ReadValue() - screenCenter;
+            aimDir = aimDir.normalized;
+
+            if(aimDir.sqrMagnitude > 0)
+            {
+                onAimInput?.Invoke(aimDir);
+            }
+
+            lastAimInput = aimDir;
         }
     }
 }
