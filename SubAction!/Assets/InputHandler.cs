@@ -25,7 +25,7 @@ public class InputHandler : MonoBehaviour
         Debug.Assert(playerCamera != null);   
     }
 
-    void FixedUpdate()
+    void Update()
     {
         Vector2 newInput = new Vector2(0.0f, 0.0f);
 
@@ -64,17 +64,17 @@ public class InputHandler : MonoBehaviour
         lastMoveInput = newInput;
 
         Mouse mouse = Mouse.current;
-        if (mouse.leftButton.isPressed)
+        if (mouse.leftButton.wasPressedThisFrame)
         {
             onPrimaryAction?.Invoke();
         }
 
-        if (mouse.rightButton.isPressed)
+        if (mouse.rightButton.wasPressedThisFrame)
         {
             onSecondaryAction?.Invoke();
         }
 
-        if (keyboard.leftShiftKey.isPressed)
+        if (keyboard.leftShiftKey.wasPressedThisFrame)
         {
             onSpecialAction?.Invoke();
         }

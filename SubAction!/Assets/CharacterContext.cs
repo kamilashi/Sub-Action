@@ -10,7 +10,7 @@ public class CharacterContext : MonoBehaviour
     public CharacterAttributes attributes;
     public CharacterHealth health;
     public Visualizer visualizer;
-    public Rigidbody rigidBody;
+    public Rigidbody2D rigidBody;
 
 
     public List<HitReceiver> hitReceivers;
@@ -23,7 +23,7 @@ public class CharacterContext : MonoBehaviour
         action = GetComponent<CharacterAction>();
         attributes = GetComponent<CharacterAttributes>();
         health = GetComponent<CharacterHealth>();
-        rigidBody = GetComponent<Rigidbody>();
+        rigidBody = GetComponent<Rigidbody2D>();
 
         visualizer = GetComponentInChildren<Visualizer>();
 

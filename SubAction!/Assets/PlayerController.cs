@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
 
 
     // this belongs in the upgrade manager / inventory
-    private void CollectCurrency(Collider other)
+    private void CollectCurrency(Collider2D other)
     {
         AddCurrency(1);
     }

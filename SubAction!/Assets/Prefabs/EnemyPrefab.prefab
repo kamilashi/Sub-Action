@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8423425469192943766}
-  - component: {fileID: 1528301971220630898}
   - component: {fileID: 4063066816666416515}
-  m_Layer: 0
+  - component: {fileID: 8811455505339196728}
+  m_Layer: 11
   m_Name: CreatureSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33,27 +33,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1582674085873210725}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &1528301971220630898
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6084023091117351017}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 1280
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 2807
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 3.19
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4063066816666416515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,6 +48,41 @@ MonoBehaviour:
   onSensorEnter:
     m_PersistentCalls:
       m_Calls: []
+--- !u!58 &8811455505339196728
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6084023091117351017}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 3.19
 --- !u!1 &6956144101088999573
 GameObject:
   m_ObjectHideFlags: 0
@@ -78,10 +92,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4952465594413332321}
-  - component: {fileID: 3204363288640497764}
   - component: {fileID: 8041869801891575255}
+  - component: {fileID: 2980733906414458220}
   m_Layer: 10
-  m_Name: CreatureAttractor
+  m_Name: EnemyAttractor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -102,27 +116,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1582674085873210725}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &3204363288640497764
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6956144101088999573}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 2048
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 2039
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8041869801891575255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,6 +131,41 @@ MonoBehaviour:
   onSensorEnter:
     m_PersistentCalls:
       m_Calls: []
+--- !u!58 &2980733906414458220
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6956144101088999573}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1001 &8410803676733385577
 PrefabInstance:
   m_ObjectHideFlags: 0

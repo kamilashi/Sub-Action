@@ -13,10 +13,10 @@ TagManager:
   - UI
   - HitEmitter
   - HitReceiver
-  - PlayerAttractor
+  - PlayerSAttractor
   - PlayerSensor
-  - EnemyAttractor
-  - EnemySensor
+  - EnemySAttractor
+  - CreatureSensor
   - 
   - 
   - 
