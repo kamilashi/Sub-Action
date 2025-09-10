@@ -20,7 +20,7 @@ public class CharacterMovement : MonoBehaviour
         context = GetComponent<CharacterContext>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         currentMoveSpeed = Library.SmoothingFuncitons.ApproachReferenceLinear(currentMoveSpeed, tagetMoveSpeed, context.attributes.movement.acceleration * Time.deltaTime);
         currentMoveDirection = Library.SmoothingFuncitons.ApproachReferenceLinear(currentMoveDirection, targetMoveDirection, context.attributes.movement.turnSpeed * Time.deltaTime);

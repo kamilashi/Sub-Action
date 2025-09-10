@@ -23,7 +23,11 @@ public class CharacterContext : MonoBehaviour
         action = GetComponent<CharacterAction>();
         attributes = GetComponent<CharacterAttributes>();
         health = GetComponent<CharacterHealth>();
-        rigidBody = GetComponent<Rigidbody2D>();
+
+        if(rigidBody == null)
+        {
+            rigidBody = GetComponent<Rigidbody2D>();
+        }
 
         visualizer = GetComponentInChildren<Visualizer>();
 

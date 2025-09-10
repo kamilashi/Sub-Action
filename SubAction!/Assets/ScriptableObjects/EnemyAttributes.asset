@@ -16,7 +16,7 @@ MonoBehaviour:
     acceleration: 30
     turnSpeed: 5
     aimSpeed: 20
-    maxSpeed: 10
+    maxSpeed: 5
   health:
     maxHealth: 10
   visualizer:
