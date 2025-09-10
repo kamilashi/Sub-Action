@@ -10,9 +10,14 @@ public class CharacterAction : MonoBehaviour
 
     void Start()
     {
+        activeAction = null;
         actions = GetComponentsInChildren<ActionBehavior>().ToList();
 
-        Debug.Assert(actions.Count > 0);
+        if(actions.Count == 0)
+        {
+            Debug.LogWarning($"No action scripts found on entity {gameObject.name}!");
+            return;
+        }
 
         actions.Sort((a, b) => a.id.CompareTo(b.id));
 
@@ -20,8 +25,6 @@ public class CharacterAction : MonoBehaviour
         {
             Debug.Assert(actions[i].id != actions[i - 1].id,  $"Duplicate ID!! {actions[i].id}");
         }
-
-        activeAction = null;
     }
 
     private void Update()

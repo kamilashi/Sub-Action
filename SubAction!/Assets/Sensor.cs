@@ -9,6 +9,11 @@ public class Sensor : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if(other.gameObject == this.gameObject)
+        {
+            return;
+        }
+
         onSensorEnter?.Invoke(other);
     }
 }

@@ -1,5 +1,143 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6084023091117351017
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8423425469192943766}
+  - component: {fileID: 1528301971220630898}
+  - component: {fileID: 4063066816666416515}
+  m_Layer: 0
+  m_Name: CreatureSensor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8423425469192943766
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6084023091117351017}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1582674085873210725}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &1528301971220630898
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6084023091117351017}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 1280
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 2807
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 3.19
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4063066816666416515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6084023091117351017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44f7a446965f95d4493c44fa2cdfd934, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onSensorEnter:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!1 &6956144101088999573
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4952465594413332321}
+  - component: {fileID: 3204363288640497764}
+  - component: {fileID: 8041869801891575255}
+  m_Layer: 10
+  m_Name: CreatureAttractor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4952465594413332321
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6956144101088999573}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1582674085873210725}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &3204363288640497764
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6956144101088999573}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 2048
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 2039
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8041869801891575255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6956144101088999573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44f7a446965f95d4493c44fa2cdfd934, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onSensorEnter:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &8410803676733385577
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8,10 +146,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 78463703988393382, guid: de3a6548fbd99894898eae2f4ac1ee7d,
+        type: 3}
+      propertyPath: startData
+      value: 
+      objectReference: {fileID: 11400000, guid: 62016d24fa5683d489732a7a281f3603,
+        type: 2}
     - target: {fileID: 5424090392869236285, guid: de3a6548fbd99894898eae2f4ac1ee7d,
         type: 3}
       propertyPath: m_Name
-      value: CharacterPrefab
+      value: EnemyPrefab
       objectReference: {fileID: 0}
     - target: {fileID: 7012074742556294668, guid: de3a6548fbd99894898eae2f4ac1ee7d,
         type: 3}
@@ -65,6 +209,46 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 7012074742556294668, guid: de3a6548fbd99894898eae2f4ac1ee7d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8423425469192943766}
+    - targetCorrespondingSourceObject: {fileID: 7012074742556294668, guid: de3a6548fbd99894898eae2f4ac1ee7d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4952465594413332321}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5424090392869236285, guid: de3a6548fbd99894898eae2f4ac1ee7d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7005875993640636025}
   m_SourcePrefab: {fileID: 100100000, guid: de3a6548fbd99894898eae2f4ac1ee7d, type: 3}
+--- !u!4 &1582674085873210725 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7012074742556294668, guid: de3a6548fbd99894898eae2f4ac1ee7d,
+    type: 3}
+  m_PrefabInstance: {fileID: 8410803676733385577}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4611422242401305940 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5424090392869236285, guid: de3a6548fbd99894898eae2f4ac1ee7d,
+    type: 3}
+  m_PrefabInstance: {fileID: 8410803676733385577}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7005875993640636025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4611422242401305940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f43f23cbdedbfe4687cfc6af79b8c93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rewardCurrencyAmount: 0
+  onStartDying:
+    m_PersistentCalls:
+      m_Calls: []

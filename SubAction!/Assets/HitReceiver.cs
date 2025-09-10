@@ -6,7 +6,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Collider))]
 public class HitReceiver : MonoBehaviour
 {
-    public UnityEvent<float> onBodyHit = new UnityEvent<float>();
+    public UnityEvent<int> onBodyHit = new UnityEvent<int>();
 
     private void OnTriggerEnter(Collider other)
     {

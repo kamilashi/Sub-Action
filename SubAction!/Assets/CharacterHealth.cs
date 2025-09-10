@@ -2,16 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [Serializable]
 public class Health
 {
-    public float maxHealth;
+    public int maxHealth;
 }
 
 public class CharacterHealth : MonoBehaviour
 {
-    public float currentHealth;
+    public UnityEvent<int> onDamaged = new UnityEvent<int>();
+    public int currentHealth;
 
     private CharacterContext context;
 
@@ -26,20 +28,19 @@ public class CharacterHealth : MonoBehaviour
         }
     }
 
-    public void RemoveHealth(float delta)
+    public void RemoveHealth(int delta)
     {
+        int oldHealth = currentHealth;
         currentHealth -= delta;
-        currentHealth = Mathf.Max(currentHealth, 0);
+        currentHealth = Math.Max(currentHealth, 0);
 
-        //return currentHealth;
+        onDamaged?.Invoke(oldHealth - currentHealth);
     }
 
-    public void AddHealth(float delta)
+    public void AddHealth(int delta)
     {
         currentHealth += delta;
-        currentHealth = Mathf.Min(currentHealth, context.attributes.health.maxHealth);
-
-        //return currentHealth;
+        currentHealth = Math.Min(currentHealth, context.attributes.health.maxHealth);
     }
 
 }

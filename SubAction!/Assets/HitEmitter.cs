@@ -5,6 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class HitEmitter : MonoBehaviour
 {
-    public float damage;
+    public int damage;
     
 }
