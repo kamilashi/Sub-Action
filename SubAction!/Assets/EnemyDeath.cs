@@ -32,6 +32,7 @@ public class EnemyDeath : MonoBehaviour
     {
         for (int i = 0; i < rewardCurrencyAmount; i++)
         {
+            Debug.Log("Spawned!");
             GameObject collectible = Instantiate(GameManager.Instance.currencyPrefab, transform.position, Quaternion.identity);
             collectible.transform.parent = null;
         }

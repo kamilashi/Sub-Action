@@ -313,7 +313,7 @@ MonoBehaviour:
   data:
     minDistance: 1
     maxDistance: 3
-    cooldown: 1
+    cooldown: 0.5
   hitEmitter: {fileID: 3521797239577672956}
   id: 0
   context: {fileID: 0}
@@ -359,5 +359,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cac6288ac70d1478f5e7db5f89d4fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerCamera: {fileID: 0}
   lastMoveInput: {x: 0, y: 0}
   lastAimInput: {x: 0, y: 0}

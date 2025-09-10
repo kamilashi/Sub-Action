@@ -8,6 +8,8 @@ using UnityEngine.InputSystem;
 public class InputHandler : MonoBehaviour
 {
     // if there is ever a multiplayer these must be changed to member events
+    public Camera playerCamera;
+
     public static UnityEvent<Vector2> onMoveInput = new UnityEvent<Vector2>();
     public static UnityEvent<Vector2> onAimInput = new UnityEvent<Vector2>();
     public static UnityEvent onStopMoveInput = new UnityEvent();
@@ -18,9 +20,9 @@ public class InputHandler : MonoBehaviour
     public Vector2 lastMoveInput;
     public Vector2 lastAimInput;
 
-    void Start()
+    void Awake()
     {
-        
+        Debug.Assert(playerCamera != null);   
     }
 
     void FixedUpdate()
@@ -79,16 +81,25 @@ public class InputHandler : MonoBehaviour
 
         //if(keyboard.leftAltKey.isPressed)
         {
-            Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
-            Vector2 aimDir = mouse.position.ReadValue() - screenCenter;
-            aimDir = aimDir.normalized;
+            Vector2 aimDir = lastAimInput;
+            Vector2 mouseScreen = Mouse.current.position.ReadValue();
+            Ray ray = playerCamera.ScreenPointToRay(mouseScreen);
+            Plane xyPlane = new Plane(Vector3.forward, Vector3.zero);
 
-            if(aimDir.sqrMagnitude > 0)
+            if (xyPlane.Raycast(ray, out float enter))
             {
-                onAimInput?.Invoke(aimDir);
-            }
+                Vector3 mouseWorld = ray.GetPoint(enter);
 
-            lastAimInput = aimDir;
+                aimDir = (mouseWorld - transform.position);
+                aimDir.Normalize();
+
+                if (aimDir.sqrMagnitude > 0)
+                {
+                    onAimInput?.Invoke(new Vector2(aimDir.x, aimDir.y));
+                }
+
+                lastAimInput = aimDir;
+            }
         }
     }
 }
