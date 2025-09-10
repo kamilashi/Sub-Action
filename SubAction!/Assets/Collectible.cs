@@ -25,7 +25,7 @@ public class Collectible : MonoBehaviour
     }
 
     [ContextMenu("Test")]
-    private void Test()
+    void Start()
     {
         Spawn();
     }

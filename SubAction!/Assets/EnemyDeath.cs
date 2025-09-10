@@ -21,11 +21,11 @@ public class EnemyDeath : MonoBehaviour
         if(context.health.currentHealth == 0)
         {
             SpawnReward();
+
+            onStartDying?.Invoke();
+
+            context.visualizer.OnStartDying(Despawn);
         }
-
-        onStartDying?.Invoke();
-
-        context.visualizer.OnStartDying(Despawn);
     }
 
     void SpawnReward()
