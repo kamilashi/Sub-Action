@@ -936,17 +936,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   segmentPrefab: {fileID: 2085519083029515512, guid: 5e56fd3a400ee3844952fbce7a73da81,
     type: 3}
-  headVisualizer: {fileID: 1962615301}
   segmentCount: 14
-  segmentSpacing: 0.35
   tailFraction: 0.2
   tailMinScale: 0.35
   target: {fileID: 1498037917}
   maxSpeed: 30
   steeringForce: 30
   arriveRadius: 2
-  distanceMultiplier: 1
-  useDistanceJoints: 1
+  maxSegmentLength: 0.42
+  stiffness: 0.8
+  tightness: 0
+  damping: 0.964
 --- !u!1 &1493480193
 GameObject:
   m_ObjectHideFlags: 0
@@ -1232,7 +1232,7 @@ PrefabInstance:
     - target: {fileID: 3945842472749043316, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
         type: 3}
       propertyPath: m_BodyType
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3945842472749043316, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
         type: 3}
@@ -1288,12 +1288,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 857566539}
   m_SourcePrefab: {fileID: 100100000, guid: 8ef87a6ee81d2a544a8628ea526e9edb, type: 3}
---- !u!1 &1962615301 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7229051337329427462, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
-    type: 3}
-  m_PrefabInstance: {fileID: 1757604977}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1969257346
 GameObject:
   m_ObjectHideFlags: 0

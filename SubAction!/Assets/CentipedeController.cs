@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngine.Windows;
 
 
@@ -10,27 +12,26 @@ public class CentipedeController : MonoBehaviour
 {
     [Header("Setup")]
     public GameObject segmentPrefab;
-    public GameObject headVisualizer;
 
     [Header("Build")]
     [Min(2)] public int segmentCount = 14;        
-    public float segmentSpacing = 0.35f;         
     [Range(0.05f, 0.5f)] public float tailFraction = 0.20f; 
-    [Range(0f, 1f)] public float tailMinScale = 0.35f;     
+    [Range(0f, 1f)] public float tailMinScale = 0.35f;      
 
     [Header("Movement")]
-    public Transform target;                     
-    public float maxSpeed = 6f;
-    public float steeringForce = 30f;
+    public Transform target;                      
     public float arriveRadius = 2.0f;            
 
     [Header("Simulation")]
-    [Min(0)] public float distanceMultiplier = 1.0f;
+    public float maxSegmentLength = 0.35f;
+    [Range(0f, 1f)] public float damping = 0.7f;
+
 
     private Rigidbody2D headBody;
-    private List<Rigidbody2D> bodies = new();
-    private List<DistanceJoint2D> springs = new(); 
-    private List<float> restDistances = new();     
+    private List<Transform> segmentTransforms = new();
+    List<Vector2> pos;
+    List<Vector2> prevPos;
+    List<float> tightnessMultipliers;
 
     private CharacterContext context;
 
@@ -48,70 +49,61 @@ public class CentipedeController : MonoBehaviour
 
         if (attack == null || (!attack.isRunning && !attack.isOnCoolDown))
         {
-            SteerHeadTowardsTarget();
+            SteerHead();
         }
 
-        LerpLinkDistances(distanceMultiplier);
+        UpdateSegments();
     }
 
     void BuildChain()
     {
-        // Spawn head
-        GameObject head = headVisualizer;
-        head.name = "Centipede_Head";
-        headBody = GetComponent<Rigidbody2D>();
-        bodies.Add(headBody);
+        pos = new List<Vector2>(segmentCount);
+        prevPos = new List<Vector2>(segmentCount);
+        tightnessMultipliers = new List<float>(segmentCount - 1);
 
         // Spawn segments
-        Rigidbody2D prev = headBody;
         Vector2 dir = (Vector2)transform.right;
+
+        pos.Add(transform.position);
+        prevPos.Add(pos[0]);
+        segmentTransforms.Add(transform);
+
         int tailCount = Mathf.Max(1, Mathf.RoundToInt(segmentCount * tailFraction));
         int bodyCount = Mathf.Max(0, segmentCount - 1);
         int tailStartIndex = Mathf.Max(1, bodyCount - tailCount + 1);
 
+        GameObject parent = new GameObject("CentipedeRoot");
+
         for (int i = 1; i < segmentCount; ++i)
         {
-            Vector3 pos = (Vector3)((Vector2)headVisualizer.transform.position - dir * (segmentSpacing * i));
-            GameObject seg = Instantiate(segmentPrefab, pos, headVisualizer.transform.rotation, headVisualizer.transform);
+            Vector3 position = (Vector3)((Vector2)headBody.transform.position - dir * (maxSegmentLength * i));
+            GameObject seg = Instantiate(segmentPrefab, position, headBody.transform.rotation, parent.transform);
             seg.name = $"Centipede_Segment_{i:D2}";
-            Rigidbody2D rb = seg.GetComponent<Rigidbody2D>();
-            bodies.Add(rb);
 
             if (i >= tailStartIndex)
             {
                 float t = Mathf.InverseLerp(tailStartIndex, segmentCount - 1, i);
                 float s = Mathf.Lerp(1f, tailMinScale, t);
-                seg.transform.localScale = new Vector3(s, s, 1f);
+                seg.transform.localScale = new Vector3(seg.transform.localScale.x, s, 1f);
             }
 
-            HingeJoint2D hinge = seg.GetComponent<HingeJoint2D>();
-            if (!hinge) hinge = seg.AddComponent<HingeJoint2D>();
-            hinge.autoConfigureConnectedAnchor = true;
-            hinge.connectedBody = prev;
-
-            DistanceJoint2D dist = seg.GetComponent<DistanceJoint2D>();
-            if (!dist) dist = seg.AddComponent<DistanceJoint2D>();
-            dist.connectedBody = prev;
-            dist.autoConfigureDistance = false;
-            dist.enableCollision = false;
-            dist.maxDistanceOnly = false;
-            dist.distance = segmentSpacing;
-
-            springs.Add(dist);
-            restDistances.Add(segmentSpacing);
-
-            prev = rb;
+            segmentTransforms.Add(seg.transform);
+            pos.Add(seg.transform.position);
+            prevPos.Add(seg.transform.position);
+            tightnessMultipliers.Add(1.0f);
 
             context.hitReceivers.AddRange(seg.GetComponentsInChildren<HitReceiver>().ToList());
         }
     }
 
-    void SteerHeadTowardsTarget()
+    void SteerHead()
     {
         if (!target || !headBody) return;
 
         Vector2 toTarget = (Vector2)(target.position - headBody.transform.position);
         float dist = toTarget.magnitude;
+        toTarget = toTarget.normalized;
+
         float speed = context.attributes.movement.maxSpeed;
 
         if (dist < arriveRadius)
@@ -119,41 +111,28 @@ public class CentipedeController : MonoBehaviour
             speed = 0.0f;
         }
 
-        //headBody.AddForce(steer, ForceMode2D.Force);
-
-        context.movement.SetTargetMoveDirection(toTarget.normalized);
-        context.movement.SetTargetAimDirection(toTarget.normalized);
+        context.movement.SetTargetMoveDirection(toTarget);
+        context.movement.SetTargetAimDirection(toTarget);
         context.movement.SetTargetMoveSpeed(speed);
-/*
+    }
 
-        if (headBody.velocity.sqrMagnitude > 0.01f)
+    void UpdateSegments()
+    {
+        pos[0] = headBody.position;
+
+        for (int i = 1; i < segmentCount; i++)
         {
-            float angle = Mathf.Atan2(headBody.velocity.y, headBody.velocity.x) * Mathf.Rad2Deg;
-            headBody.MoveRotation(angle);
-        }*/
-    }
+            Vector2 dir = -segmentTransforms[i-1].right;
+            Vector2 newPos = pos[i-1] + dir * maxSegmentLength * tightnessMultipliers[i];
 
-    public void LerpLinkDistances(float targetMultiplier)
-    {
-        for (int i = 0; i < springs.Count; i++)
-        {
-            springs[i].distance = Mathf.Lerp(springs[i].distance, restDistances[i] * targetMultiplier, 0.22f);
-        }
-    }
+            Debug.DrawLine(pos[i - 1], newPos);
+            Quaternion rotation = Quaternion.Slerp(segmentTransforms[i - 1].rotation, segmentTransforms[i].rotation, damping);
 
-    public void SetLinkDistances(float multiplier)
-    {
-        for (int i = 0; i < springs.Count; i++)
-        { 
-            springs[i].distance = restDistances[i] * multiplier;
-        }
-    }
+            segmentTransforms[i].Translate(newPos - pos[i], Space.World);
+            segmentTransforms[i].rotation = rotation;
 
-    public void ResetLinkDistances()
-    {
-        for (int i = 0; i < springs.Count; i++)
-        { 
-            springs[i].distance = restDistances[i]; 
+            prevPos[i] = pos[i];
+            pos[i] = segmentTransforms[i].position;
         }
     }
 }
