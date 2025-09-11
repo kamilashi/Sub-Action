@@ -77,7 +77,7 @@ public class CentipedeAction1 : ActionBehavior
             moveDirection.Normalize();
 
             Vector2 facing = Quaternion.Euler(0, 0, angle) * moveDirection;
-            context.movement.ForceAimDirection(facing);
+            context.movement.SetTargetAimDirection(facing);
             context.movement.ForceMoveDirection(moveDirection);
 
             yield return null;

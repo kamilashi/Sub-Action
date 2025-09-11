@@ -36,7 +36,7 @@ public class CameraController : MonoBehaviour
     public float zoomSensitivity = 0.5f;
     public float targetZ;
 
-    void Awake()
+    void Start()
     {
         if(Instance == null)
         {

@@ -1529,6 +1529,11 @@ PrefabInstance:
       propertyPath: movement.maxSpeed
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 8480259625697115855, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
+        type: 3}
+      propertyPath: movement.turnSpeed
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7923614374982012388, guid: 8ef87a6ee81d2a544a8628ea526e9edb, type: 3}
     m_RemovedGameObjects: []

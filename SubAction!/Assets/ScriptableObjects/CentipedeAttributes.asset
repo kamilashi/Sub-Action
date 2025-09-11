@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 647bb53852e9b7d41bfcca48ac4039fc, type: 3}
+  m_Name: CentipedeAttributes
+  m_EditorClassIdentifier: 
+  movement:
+    acceleration: 30
+    turnSpeed: 10
+    aimSpeed: 20
+    maxSpeed: 5
+  health:
+    maxHealth: 10
+  visualizer:
+    mainColor: {r: 0.8301887, g: 0.72144, b: 0.36418653, a: 0}
