@@ -19,14 +19,18 @@ public class InputHandler : MonoBehaviour
 
     public UnityEvent<float> onVerticalScoll = new UnityEvent<float>();
 
-    public static InputHandler Current;
+    public static InputHandler Own;
 
     public Vector2 lastMoveInput;
     public Vector2 lastAimInput;
 
     void Awake()
     {
-        Current = this;
+        if(Own == null)
+        {
+            Own = this;
+        }
+
         Debug.Assert(playerCamera != null);   
     }
 

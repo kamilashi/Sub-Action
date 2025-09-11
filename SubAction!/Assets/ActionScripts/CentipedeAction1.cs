@@ -13,7 +13,7 @@ public class CentipedeAction1 : ActionBehavior
     public float frequencyHzMax = 1.5f;
     public float anticipationDuration = 1.0f;
     public float maxSpeed = 50.0f;
-    public float maxOscillationAngle = 20.0f;
+    public float maxOscillationAngleDeg = 20.0f;
     public float frequencyHzMin = 0.5f;
     public float chargeDuration = 0.5f;
     public float cooldownDuration = 1.0f;
@@ -64,7 +64,7 @@ public class CentipedeAction1 : ActionBehavior
                 freq = Mathf.Lerp(frequencyHzMin, frequencyHzMax, blend);
             }
 
-            float angle = Mathf.Sin(time * 2f * Mathf.PI * freq) * maxOscillationAngle;
+            float angle = Mathf.Sin(time * 2f * Mathf.PI * freq) * maxOscillationAngleDeg;
 
             moveDirection = (controller.target.position - context.rigidBody.transform.position);
             float squareDistance = moveDirection.sqrMagnitude;

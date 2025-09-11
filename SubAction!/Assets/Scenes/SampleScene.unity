@@ -295,6 +295,9 @@ MonoBehaviour:
   constraints:
     minZ: -20
     maxZ: -10
+  testRumble:
+    duration: 1
+    maxRollDeg: 20
   zoomSensitivity: 0.5
   targetZ: 0
 --- !u!1 &410087039
@@ -572,7 +575,7 @@ MonoBehaviour:
   frequencyHzMax: 3
   anticipationDuration: 1
   maxSpeed: 40
-  maxOscillationAngle: 20
+  maxOscillationAngleDeg: 20
   frequencyHzMin: 0
   chargeDuration: 1
   cooldownDuration: 0.5

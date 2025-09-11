@@ -442,8 +442,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   "\u0441ontext": {fileID: 0}
-  currencyData:
-    currentAmount: 0
+  cameraController: {fileID: 0}
+  inevntory:
+    currencyAmount: 0
+  damageResponce:
+    maxDamageRef: 20
+    maxDamageRumble:
+      duration: 2
+      maxRollDeg: 30
+    minDamageRef: 1
+    minDamageRumble:
+      duration: 1
+      maxRollDeg: 1
   currencySensor: {fileID: 6167162917236591453}
 --- !u!114 &-6540944921526924894
 MonoBehaviour:
@@ -458,5 +468,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 0}
+  onMoveInput:
+    m_PersistentCalls:
+      m_Calls: []
+  onAimInput:
+    m_PersistentCalls:
+      m_Calls: []
+  onStopMoveInput:
+    m_PersistentCalls:
+      m_Calls: []
+  onPrimaryAction:
+    m_PersistentCalls:
+      m_Calls: []
+  onSecondaryAction:
+    m_PersistentCalls:
+      m_Calls: []
+  onSpecialAction:
+    m_PersistentCalls:
+      m_Calls: []
+  onVerticalScoll:
+    m_PersistentCalls:
+      m_Calls: []
   lastMoveInput: {x: 0, y: 0}
   lastAimInput: {x: 0, y: 0}

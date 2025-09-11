@@ -4,29 +4,44 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public struct CurrencyData
+public struct Inventory
 {
-    public int currentAmount;
+    public int currencyAmount;
+}
+
+[Serializable]
+public struct DamageResponce
+{
+    public int maxDamageRef;
+    public RumbleSettings maxDamageRumble;
+    public int minDamageRef;
+    public RumbleSettings minDamageRumble;
 }
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private CharacterContext сontext;
-    [SerializeField] private CurrencyData currencyData;
+    [SerializeField] private CameraController cameraController;
 
+    [SerializeField] private Inventory inevntory;
+
+    public DamageResponce damageResponce;
     public Sensor currencySensor;
 
     void Start()
     {
         сontext = GetComponent<CharacterContext>();
+        cameraController = CameraController.Instance;
 
-        InputHandler.Current.onMoveInput.AddListener(OnMoveInputSubmitted);
-        InputHandler.Current.onAimInput.AddListener(OnAimInputSubmitted);
-        InputHandler.Current.onStopMoveInput.AddListener(OnMoveInputStopped);
+        InputHandler.Own.onMoveInput.AddListener(OnMoveInputSubmitted);
+        InputHandler.Own.onAimInput.AddListener(OnAimInputSubmitted);
+        InputHandler.Own.onStopMoveInput.AddListener(OnMoveInputStopped);
         
-        InputHandler.Current.onPrimaryAction.AddListener(OnPrimaryAction);
-        InputHandler.Current.onSecondaryAction.AddListener(OnSecondaryAction);
-        InputHandler.Current.onSpecialAction.AddListener(OnSpecialAction);
+        InputHandler.Own.onPrimaryAction.AddListener(OnPrimaryAction);
+        InputHandler.Own.onSecondaryAction.AddListener(OnSecondaryAction);
+        InputHandler.Own.onSpecialAction.AddListener(OnSpecialAction);
+
+        сontext.health.onDamaged.AddListener(OnDamaged);
 
         Debug.Assert(currencySensor != null);
 
@@ -88,11 +103,21 @@ public class PlayerController : MonoBehaviour
     
     private void AddCurrency(int amount)
     {
-        currencyData.currentAmount += amount;
+        inevntory.currencyAmount += amount;
     }
     private void RemoveCurrency(int amount)
     {
-        currencyData.currentAmount += amount;
+        inevntory.currencyAmount += amount;
+    }
+
+    private void OnDamaged(int amount)
+    {
+        float intensity = (amount - damageResponce.minDamageRef) / damageResponce.maxDamageRef;
+
+        float duration = Mathf.Lerp(damageResponce.minDamageRumble.duration, damageResponce.maxDamageRumble.duration, intensity);
+        float roll = Mathf.Lerp(damageResponce.minDamageRumble.maxRollDeg, damageResponce.maxDamageRumble.maxRollDeg, intensity);
+
+        cameraController.TriggerRumple(new RumbleSettings(duration, roll));
     }
 
     private bool IsDashActive()

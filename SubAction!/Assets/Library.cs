@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Library
@@ -29,6 +30,14 @@ namespace Library
             }
 
             return output;
+        }
+
+        public static float SyncDecay(float input, float amplitudeCoef, float decayRate, float period, float phaseCoef)
+        {
+            float freq = (2.0f * Mathf.PI) / period;
+            float sync = Mathf.Pow(2.0f, -1.0f * decayRate * input) * Mathf.Cos(freq * input + phaseCoef) * amplitudeCoef;
+
+            return sync;
         }
 
         public static Vector3 ApproachReferenceLinear(Vector3 input, Vector3 reference, float speed)
@@ -103,7 +112,18 @@ namespace Library
         {
             return 1 - Mathf.Pow(1 - input, 3);
         }
-    }
+
+        public static float EaseOutElastic(float input) 
+        {
+            const float c4 = (2.0f * Mathf.PI) / 3.0f;
+
+            return input == 0.0f
+              ? 0.0f
+              : input == 1.0f
+              ? 1.0f
+              : Mathf.Pow(2.0f, -10.0f * input) * Mathf.Sin((input * 10.0f - 0.75f) * c4) + 1.0f;
+        }
+}
 
     public static class Misc
     {

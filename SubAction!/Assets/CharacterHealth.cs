@@ -40,7 +40,11 @@ public class CharacterHealth : MonoBehaviour
         currentHealth -= delta;
         currentHealth = Math.Max(currentHealth, 0);
 
-        onDamaged?.Invoke(oldHealth - currentHealth);
+        int damage = oldHealth - currentHealth;
+        if (damage > 0)
+        {
+            onDamaged?.Invoke(damage);
+        }
     }
 
     public void AddHealth(int delta)
