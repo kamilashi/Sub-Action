@@ -36,7 +36,7 @@ public class CameraController : MonoBehaviour
     public float zoomSensitivity = 0.5f;
     public float targetZ;
 
-    void Start()
+    void Awake()
     {
         if(Instance == null)
         {
@@ -44,6 +44,10 @@ public class CameraController : MonoBehaviour
         }
 
         targetZ = transform.position.z;
+    }
+
+    private void Start()
+    {
         InputHandler.Own.onVerticalScoll.AddListener(OnZoomInput);
     }
 

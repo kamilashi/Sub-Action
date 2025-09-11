@@ -1125,6 +1125,8 @@ MonoBehaviour:
   tightLength: 0.34
   looseLength: 0.4
   damping: 0.964
+  spring: 0.919
+  rigidDirFallbackSlope: 1
   isSteering: 0
   isDying: 0
   alignedWithTarget: 0

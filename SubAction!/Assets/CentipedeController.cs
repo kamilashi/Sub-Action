@@ -26,6 +26,8 @@ public class CentipedeController : MonoBehaviour
     public float tightLength = 0.4f;
     public float looseLength = 0.7f;
     [Range(0f, 1f)] public float damping = 0.7f;
+    [Range(0f, 1f)] public float spring = 0.1f; // low spring might make the movement "slidy"
+    public float rigidDirFallbackSlope = 1.0f;
 
     [Header("Debug")]
     public bool isSteering;
@@ -181,8 +183,15 @@ public class CentipedeController : MonoBehaviour
 
             float length = Mathf.Lerp(tightLength, looseLength, looseMultiplier[i - 1]);
 
-            Vector2 dir = -segmentTransforms[i - 1].right;
-            Vector2 newPos = pos[i - 1] + dir * length;
+            Vector2 rigidDir = -segmentTransforms[i - 1].right;
+
+            Vector2 verletVelocity = (pos[i - 1] - prevPos[i - 1]);
+            Vector2 elasticDir = Vector2.Lerp(rigidDir, verletVelocity.normalized, Mathf.Min(verletVelocity.sqrMagnitude * rigidDirFallbackSlope, 1.0f));
+
+            Vector2 rigidPos = pos[i - 1] + rigidDir * length;
+            Vector2 elasicPos = prevPos[i - 1] + elasticDir * length;
+
+            Vector2 newPos = Vector2.Lerp(rigidPos, elasicPos, spring);
 
             segmentTransforms[i].Translate(newPos - pos[i], Space.World);
 
@@ -190,6 +199,8 @@ public class CentipedeController : MonoBehaviour
             pos[i] = segmentTransforms[i].position;
             segmentTransforms[i].rotation = rotation;
         }
+
+        prevPos[0] = pos[0];
     }
 
     void FluctuateTightness()

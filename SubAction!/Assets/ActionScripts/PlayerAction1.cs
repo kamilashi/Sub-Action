@@ -12,6 +12,11 @@ public class PlayerAction1 : ActionBehavior
 
     void OnEnable()
     {
+        if(!isInitialized)
+        {
+            return;
+        }
+
         StartCoroutine(DashCoroutine());
     }
 

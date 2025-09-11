@@ -42,26 +42,31 @@ public class CentipedeAction1 : ActionBehavior
 
         float defaultSegmentLength = controller.tightLength;
         float initialDamping = controller.damping;
+        float initialiSpring = controller.spring;
 
         float time = 0.0f;
+        float combinedLength = anticipationDuration + chargeDuration;
 
-        while (time < (anticipationDuration + chargeDuration)) 
+        while (time < combinedLength) 
         {
             time += Time.deltaTime;
 
-            float ramp = time / anticipationDuration;
-            controller.damping = Mathf.Lerp(initialDamping, minDamping, ramp);
+            float ramp = Mathf.Clamp01(time / anticipationDuration);
+            float progress = time / combinedLength;
 
             float freq;
-            if (time > anticipationDuration)
+            if (time > anticipationDuration) // charge 
             {
                 float blend = Mathf.Sin(time * 2f * Mathf.PI * (1 / (anticipationDuration * 4.0f)));
                 freq = Mathf.Lerp(frequencyHzMax, frequencyHzMin, blend);
+                //controller.spring = Mathf.Lerp(0.0f, initialiSpring, progress * progress);
             }
-            else
+            else // anticipation
             {
                 float blend = Mathf.Sin(time * 2f * Mathf.PI * (1 / (chargeDuration * 4.0f)));
                 freq = Mathf.Lerp(frequencyHzMin, frequencyHzMax, blend);
+                controller.spring = Mathf.Lerp(initialiSpring , 0.0f, ramp * 3.0f);
+                controller.damping = Mathf.Lerp(initialDamping, minDamping, ramp * 5.0f); // + no spring = rigid turns
             }
 
             float angle = Mathf.Sin(time * 2f * Mathf.PI * freq) * maxOscillationAngleDeg;
@@ -86,17 +91,21 @@ public class CentipedeAction1 : ActionBehavior
         time = 0.0f;
         context.movement.SetTargetMoveSpeed(0.0f);
 
+        float currentDamping = controller.damping;
+        float currentSpring = controller.spring;
+
         while (time < cooldownDuration)
         {
             time += Time.deltaTime;
             float progress = Mathf.Clamp01( time / cooldownDuration);
+            float ease = progress * progress;
 
-            controller.damping = Mathf.Lerp(minDamping, initialDamping, progress * progress);
+            controller.damping = Mathf.Lerp(/*minDamping*/ currentDamping, initialDamping, ease);
+            controller.spring = Mathf.Lerp(currentSpring, initialiSpring, ease);
             context.movement.SetTargetMoveSpeed(1 - progress);
 
             yield return null;
         }
-
 
         controller.damping = initialDamping;
 

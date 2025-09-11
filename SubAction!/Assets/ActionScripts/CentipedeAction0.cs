@@ -42,7 +42,6 @@ public class CentipedeAction0 : ActionBehavior
 
         float initialDamping = controller.damping;
 
-
         float time = 0.0f;
         while (time < anticipationDuration) 
         {
