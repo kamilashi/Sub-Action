@@ -13,6 +13,7 @@ public class ActionData
 
 public abstract class ActionBehavior : MonoBehaviour
 {
+    [Header("Common")]
     public bool isRunning = false;
     public bool isOnCoolDown = false;
 
@@ -29,18 +30,12 @@ public abstract class ActionBehavior : MonoBehaviour
     {
         context = GetComponentInParent<CharacterContext>();
         Debug.Assert(id >= 0);
-        Debug.Assert(hitEmitter != null);
+        if(hitEmitter == null)
+        {
+           Debug.LogWarning($"Hit emitter for {this.name} is not set!");
+        }
+
         isInitialized = true;
         this.enabled = false;
     }
-
-    /*
-
-    protected virtual void OnEnable()
-    {
-        if (!isInitialized)
-        {
-            return;
-        }
-    }*/
 }

@@ -14,7 +14,9 @@ public class CharacterContext : MonoBehaviour
 
 
     public List<HitReceiver> hitReceivers;
-    //public List<HitEmitter> hitEmitters;
+    public List<HitEmitter> hitEmitters;
+
+    public int entityId;
 
 
     private void Awake()
@@ -24,7 +26,9 @@ public class CharacterContext : MonoBehaviour
         attributes = GetComponent<CharacterAttributes>();
         health = GetComponent<CharacterHealth>();
 
-        if(rigidBody == null)
+        entityId = gameObject.GetInstanceID();
+
+        if (rigidBody == null)
         {
             rigidBody = GetComponent<Rigidbody2D>();
         }
@@ -32,7 +36,17 @@ public class CharacterContext : MonoBehaviour
         visualizer = GetComponentInChildren<Visualizer>();
 
         hitReceivers = GetComponentsInChildren<HitReceiver>().ToList();
-        //hitEmitters = GetComponentsInChildren<HitEmitter>().ToList();
+        hitEmitters = GetComponentsInChildren<HitEmitter>().ToList();
+
+        foreach (HitReceiver hitReceiver in hitReceivers)
+        {
+            hitReceiver.entityId = entityId;
+        }
+
+        foreach (HitEmitter hitEmitter in hitEmitters)
+        {
+            hitEmitter.entityId = entityId;
+        }
 
         Debug.Assert(hitReceivers.Count > 0);
     }

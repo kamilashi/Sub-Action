@@ -10,18 +10,23 @@ public class InputHandler : MonoBehaviour
     // if there is ever a multiplayer these must be changed to member events
     public Camera playerCamera;
 
-    public static UnityEvent<Vector2> onMoveInput = new UnityEvent<Vector2>();
-    public static UnityEvent<Vector2> onAimInput = new UnityEvent<Vector2>();
-    public static UnityEvent onStopMoveInput = new UnityEvent();
-    public static UnityEvent onPrimaryAction = new UnityEvent();
-    public static UnityEvent onSecondaryAction = new UnityEvent();
-    public static UnityEvent onSpecialAction = new UnityEvent();
+    public  UnityEvent<Vector2> onMoveInput = new UnityEvent<Vector2>();
+    public  UnityEvent<Vector2> onAimInput = new UnityEvent<Vector2>();
+    public  UnityEvent onStopMoveInput = new UnityEvent();
+    public  UnityEvent onPrimaryAction = new UnityEvent();
+    public  UnityEvent onSecondaryAction = new UnityEvent();
+    public  UnityEvent onSpecialAction = new UnityEvent();
+
+    public UnityEvent<float> onVerticalScoll = new UnityEvent<float>();
+
+    public static InputHandler Current;
 
     public Vector2 lastMoveInput;
     public Vector2 lastAimInput;
 
     void Awake()
     {
+        Current = this;
         Debug.Assert(playerCamera != null);   
     }
 
@@ -100,6 +105,13 @@ public class InputHandler : MonoBehaviour
 
                 lastAimInput = aimDir;
             }
+        }
+
+        Vector2 scroll = Mouse.current.scroll.ReadValue();
+
+        if(scroll.y != 0)
+        {
+            onVerticalScoll?.Invoke(scroll.y);
         }
     }
 }

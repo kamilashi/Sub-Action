@@ -41,6 +41,11 @@ namespace Library
             return new Vector3 (ApproachReferenceLinear(input.x, reference.x, speeds.x), ApproachReferenceLinear(input.y, reference.y, speeds.y), ApproachReferenceLinear(input.z, reference.z, speeds.z));
         }
 
+        public static float GetInOutLinearRamp(float input)
+        {
+            return 1.0f - 2.0f * Mathf.Abs(input - 0.5f);
+        }
+
         public static float Damp(float a, float b, float lambda, float dt)
         {
             return Mathf.Lerp(a, b, 1 - Mathf.Exp(-lambda * dt));

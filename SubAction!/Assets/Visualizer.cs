@@ -12,9 +12,12 @@ public class VisualizerData
 
 public class Visualizer : MonoBehaviour
 {
-    public Renderer bodyRenderer;
+    public List<Renderer> bodyRenderers;
+    //public Material mainMaterial;
+
     public float hitDuration = 1.0f;
     public float dissolveDuration = 1.5f;
+    public bool setPerMaterialInstace = true;
 
     private MaterialPropertyBlock visualizerMPB;
     private CharacterContext context;
@@ -24,12 +27,12 @@ public class Visualizer : MonoBehaviour
         context = GetComponentInParent<CharacterContext>();
 
         visualizerMPB = new MaterialPropertyBlock();
-        Debug.Assert(bodyRenderer != null);
 
-        bodyRenderer.GetPropertyBlock(visualizerMPB);
+        Debug.Assert(bodyRenderers != null);
+
+        /*bodyRenderer.GetPropertyBlock(visualizerMPB);
         visualizerMPB.SetColor("_MainColor", context.attributes.startData.visualizer.mainColor);
-        bodyRenderer.SetPropertyBlock(visualizerMPB);
-
+        bodyRenderer.SetPropertyBlock(visualizerMPB);*/
 
         context.health.onDamaged.AddListener(OnDamaged);
     }
@@ -52,16 +55,26 @@ public class Visualizer : MonoBehaviour
         StartCoroutine(ParameterBlendInCoroutine("_Dissolve", dissolveDuration, onFinichedAction));
     }
 
-    public void SetFloatProperty(string parameterName, float value)
+    public void SetFloatPropertyInstance(string parameterName, float value)
     {
-        bodyRenderer.GetPropertyBlock(visualizerMPB);
-        visualizerMPB.SetFloat(parameterName, value);
-        bodyRenderer.SetPropertyBlock(visualizerMPB);
+        foreach (Renderer renderer in bodyRenderers)
+        {
+            renderer.GetPropertyBlock(visualizerMPB);
+            visualizerMPB.SetFloat(parameterName, value);
+            renderer.SetPropertyBlock(visualizerMPB);
+        }
+    }
+
+    public void SetFloatPropertyCopy(string parameterName, float value)
+    {
+        foreach (Renderer renderer in bodyRenderers)
+        {
+            renderer.material.SetFloat(parameterName, value);
+        }
     }
 
     IEnumerator ParameterBlendInOutCoroutine(string parameterName, float duration)
     {
-        bodyRenderer.GetPropertyBlock(visualizerMPB);
 
         float damagedValue = 0.0f;
         float time = 0.0f;
@@ -74,15 +87,22 @@ public class Visualizer : MonoBehaviour
             progress = Mathf.Clamp01(progress);
             damagedValue = 1.0f - 2.0f * Mathf.Abs(progress - 0.5f);
             damagedValue *= damagedValue;
-            visualizerMPB.SetFloat(parameterName, damagedValue);
-            bodyRenderer.SetPropertyBlock(visualizerMPB);
+
+            if (setPerMaterialInstace)
+            {
+                SetFloatPropertyInstance(parameterName, damagedValue);
+            }
+            else
+            {
+                SetFloatPropertyCopy(parameterName, damagedValue);
+            }
+
             yield return null;
         }
     }
+
     IEnumerator ParameterBlendInCoroutine(string parameterName, float duration, Action onFinishedAction = null)
     {
-        bodyRenderer.GetPropertyBlock(visualizerMPB);
-
         float time = 0.0f;
 
         while (time <= duration)
@@ -91,8 +111,16 @@ public class Visualizer : MonoBehaviour
 
             float progress = time / duration;
             progress = Mathf.Clamp01(progress);
-            visualizerMPB.SetFloat(parameterName, progress);
-            bodyRenderer.SetPropertyBlock(visualizerMPB);
+
+            if (setPerMaterialInstace)
+            {
+                SetFloatPropertyInstance(parameterName, progress);
+            }
+            else
+            {
+                SetFloatPropertyCopy(parameterName, progress);
+            }
+
             yield return null;
         }
 

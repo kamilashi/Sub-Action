@@ -20,12 +20,13 @@ public class PlayerController : MonoBehaviour
     {
         сontext = GetComponent<CharacterContext>();
 
-        InputHandler.onMoveInput.AddListener(OnMoveInputSubmitted);
-        InputHandler.onAimInput.AddListener(OnAimInputSubmitted);
-        InputHandler.onStopMoveInput.AddListener(OnMoveInputStopped);
+        InputHandler.Current.onMoveInput.AddListener(OnMoveInputSubmitted);
+        InputHandler.Current.onAimInput.AddListener(OnAimInputSubmitted);
+        InputHandler.Current.onStopMoveInput.AddListener(OnMoveInputStopped);
         
-        InputHandler.onPrimaryAction.AddListener(OnPrimaryAction);
-        InputHandler.onSecondaryAction.AddListener(OnSecondaryAction);
+        InputHandler.Current.onPrimaryAction.AddListener(OnPrimaryAction);
+        InputHandler.Current.onSecondaryAction.AddListener(OnSecondaryAction);
+        InputHandler.Current.onSpecialAction.AddListener(OnSpecialAction);
 
         Debug.Assert(currencySensor != null);
 
@@ -36,19 +37,30 @@ public class PlayerController : MonoBehaviour
     {
         сontext.action.TryRun(0);
     }
+
     private void OnSecondaryAction()
+    {
+        сontext.action.TryRun(0);
+    }
+
+    private void OnSpecialAction()
     {
         сontext.action.TryRun(1);
     }
 
     private void OnMoveInputSubmitted(Vector2 input)
     {
+        if (IsDashActive())
+        {
+            return;
+        }
+
         сontext.movement.SetTargetMoveDirection(input);
         сontext.movement.SetTargetMoveSpeed(сontext.attributes.movement.maxSpeed);
 
         if(сontext.movement.currentMoveSpeed == 0.0f)
         {
-            сontext.movement.SetCurrentMoveDirection(input);
+            сontext.movement.ForceMoveDirection(input);
         }
     }
 
@@ -59,6 +71,11 @@ public class PlayerController : MonoBehaviour
 
     private void OnMoveInputStopped()
     {
+        if(IsDashActive())
+        {
+            return;
+        }
+
         сontext.movement.SetTargetMoveSpeed(0.0f);
     }
 
@@ -76,5 +93,11 @@ public class PlayerController : MonoBehaviour
     private void RemoveCurrency(int amount)
     {
         currencyData.currentAmount += amount;
+    }
+
+    private bool IsDashActive()
+    {
+        ActionBehavior activeAction = сontext.action.activeAction;
+        return activeAction != null && activeAction.isRunning && activeAction.id == 1;
     }
 }

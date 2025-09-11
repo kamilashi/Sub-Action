@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerBody
+  m_Name: Centipede
   m_Shader: {fileID: -6465566751694194690, guid: 99d72300f42abe642ab038da3bda1a3c,
     type: 3}
   m_Parent: {fileID: 0}
@@ -104,6 +104,7 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.5
+    - _DIssolve: 0
     - _Damaged: 0
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
@@ -132,6 +133,6 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _MainColor: {r: 0.42808828, g: 0.6364385, b: 0.8726415, a: 0}
+    - _MainColor: {r: 0.35137057, g: 0.7924528, b: 0.59132713, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

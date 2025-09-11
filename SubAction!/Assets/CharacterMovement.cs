@@ -9,7 +9,7 @@ public class CharacterMovement : MonoBehaviour
     public Vector2 targetMoveDirection;
     public Vector2 currentMoveDirection;
 
-    public float tagetMoveSpeed;
+    public float targetMoveSpeed;
     public float currentMoveSpeed;
 
     public Vector2 targetAimDirection;
@@ -22,7 +22,7 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
-        currentMoveSpeed = Library.SmoothingFuncitons.ApproachReferenceLinear(currentMoveSpeed, tagetMoveSpeed, context.attributes.movement.acceleration * Time.deltaTime);
+        currentMoveSpeed = Library.SmoothingFuncitons.ApproachReferenceLinear(currentMoveSpeed, targetMoveSpeed, context.attributes.movement.acceleration * Time.deltaTime);
         currentMoveDirection = Library.SmoothingFuncitons.ApproachReferenceLinear(currentMoveDirection, targetMoveDirection, context.attributes.movement.turnSpeed * Time.deltaTime);
         currentAimDirection = Library.SmoothingFuncitons.ApproachReferenceLinear(currentAimDirection, targetAimDirection, context.attributes.movement.aimSpeed * Time.deltaTime);
 
@@ -38,9 +38,10 @@ public class CharacterMovement : MonoBehaviour
     {
         targetMoveDirection = direction;
     }
-    public void SetCurrentMoveDirection(Vector2 direction)
+    public void ForceMoveDirection(Vector2 direction)
     {
         currentMoveDirection = direction;
+        targetMoveDirection = direction;
     }
 
     public void SetTargetAimDirection(Vector2 direction)
@@ -48,8 +49,19 @@ public class CharacterMovement : MonoBehaviour
         targetAimDirection = direction;
     }
 
+    public void ForceAimDirection(Vector2 direction)
+    {
+        currentAimDirection = direction;
+        targetAimDirection = direction;
+    }
+
     public void SetTargetMoveSpeed(float speed)
     {
-        tagetMoveSpeed = speed;
+        targetMoveSpeed = speed;
+    }
+    public void ForceMoveSpeed(float speed)
+    {
+        currentMoveSpeed = speed;
+        targetMoveSpeed = speed;
     }
 }

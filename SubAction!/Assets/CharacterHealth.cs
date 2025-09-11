@@ -14,6 +14,7 @@ public class CharacterHealth : MonoBehaviour
 {
     public UnityEvent<int> onDamaged = new UnityEvent<int>();
     public int currentHealth;
+    public bool isInvincible;
 
     private CharacterContext context;
 
@@ -30,6 +31,11 @@ public class CharacterHealth : MonoBehaviour
 
     public void RemoveHealth(int delta)
     {
+        if(isInvincible)
+        {
+            return;
+        }
+
         int oldHealth = currentHealth;
         currentHealth -= delta;
         currentHealth = Math.Max(currentHealth, 0);
@@ -41,6 +47,12 @@ public class CharacterHealth : MonoBehaviour
     {
         currentHealth += delta;
         currentHealth = Math.Min(currentHealth, context.attributes.health.maxHealth);
+    }
+
+    // might need to be changed to bitfield to support differetn sources
+    public void SetInvincible(bool enabled)
+    {
+        isInvincible = enabled;
     }
 
 }

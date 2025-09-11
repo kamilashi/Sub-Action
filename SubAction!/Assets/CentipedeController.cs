@@ -23,34 +23,67 @@ public class CentipedeController : MonoBehaviour
     public float arriveRadius = 2.0f;            
 
     [Header("Simulation")]
-    public float maxSegmentLength = 0.35f;
+    public float tightLength = 0.4f;
+    public float looseLength = 0.7f;
     [Range(0f, 1f)] public float damping = 0.7f;
 
+    [Header("Debug")]
+    public bool isSteering;
+    public bool isDying;
+    public float alignedWithTarget = 0.0f;
 
     private Rigidbody2D headBody;
     private List<Transform> segmentTransforms = new();
     List<Vector2> pos;
     List<Vector2> prevPos;
-    List<float> tightnessMultipliers;
+    List<float> looseMultiplier;
 
     private CharacterContext context;
+    private EnemyDeath death;
+    private GameObject segmentsParent;
 
     void Start()
     {
         context = GetComponent<CharacterContext>();
+        death = GetComponent<EnemyDeath>();
+
         headBody = context.rigidBody;
+
+        death.onStartDying.AddListener(OnStartDying);
 
         BuildChain();
     }
 
     void FixedUpdate()
     {
-        ActionBehavior attack = context.action.activeAction;
-
-        if (attack == null || (!attack.isRunning && !attack.isOnCoolDown))
+        if(isDying)
         {
-            SteerHead();
+            segmentsParent.transform.parent = this.transform;
+            if(context.action.activeAction != null)
+            {
+                context.action.activeAction.StopAllCoroutines();
+            }
+
+            return;
         }
+
+        ActionBehavior attack = context.action.activeAction;
+        alignedWithTarget = 1.0f;
+
+        if (attack == null || !attack.isRunning)
+        {
+            //SteerHead();
+
+            //FluctuateTightness();
+
+            if(!context.action.TryRun(1))
+            {
+                SteerHead();
+            }
+
+            isSteering = true;
+        }
+        isSteering = false;
 
         UpdateSegments();
     }
@@ -59,7 +92,7 @@ public class CentipedeController : MonoBehaviour
     {
         pos = new List<Vector2>(segmentCount);
         prevPos = new List<Vector2>(segmentCount);
-        tightnessMultipliers = new List<float>(segmentCount - 1);
+        looseMultiplier = new List<float>(segmentCount - 1);
 
         // Spawn segments
         Vector2 dir = (Vector2)transform.right;
@@ -72,12 +105,12 @@ public class CentipedeController : MonoBehaviour
         int bodyCount = Mathf.Max(0, segmentCount - 1);
         int tailStartIndex = Mathf.Max(1, bodyCount - tailCount + 1);
 
-        GameObject parent = new GameObject("CentipedeRoot");
+        segmentsParent = new GameObject("CentipedeRoot");
 
         for (int i = 1; i < segmentCount; ++i)
         {
-            Vector3 position = (Vector3)((Vector2)headBody.transform.position - dir * (maxSegmentLength * i));
-            GameObject seg = Instantiate(segmentPrefab, position, headBody.transform.rotation, parent.transform);
+            Vector3 position = (Vector3)((Vector2)headBody.transform.position - dir * (tightLength * i));
+            GameObject seg = Instantiate(segmentPrefab, position, headBody.transform.rotation, segmentsParent.transform);
             seg.name = $"Centipede_Segment_{i:D2}";
 
             if (i >= tailStartIndex)
@@ -90,9 +123,22 @@ public class CentipedeController : MonoBehaviour
             segmentTransforms.Add(seg.transform);
             pos.Add(seg.transform.position);
             prevPos.Add(seg.transform.position);
-            tightnessMultipliers.Add(1.0f);
+            looseMultiplier.Add(0.0f);
 
             context.hitReceivers.AddRange(seg.GetComponentsInChildren<HitReceiver>().ToList());
+            context.hitEmitters.AddRange(seg.GetComponentsInChildren<HitEmitter>().ToList());
+            context.visualizer.bodyRenderers.Add(seg.gameObject.GetComponentInChildren<Renderer>());
+        }
+
+        foreach (HitReceiver hitReceiver in context.hitReceivers) 
+        {
+            hitReceiver.onBodyHit.AddListener(context.health.RemoveHealth);
+            hitReceiver.entityId = context.entityId;
+        }
+        
+        foreach (HitEmitter hitEmitter in context.hitEmitters) 
+        {
+            hitEmitter.entityId = context.entityId;
         }
     }
 
@@ -104,16 +150,25 @@ public class CentipedeController : MonoBehaviour
         float dist = toTarget.magnitude;
         toTarget = toTarget.normalized;
 
+        context.movement.SetTargetAimDirection(toTarget);
+
+        // wait until aligned
+        alignedWithTarget = Vector2.Dot(toTarget, headBody.transform.right);
+
         float speed = context.attributes.movement.maxSpeed;
 
         if (dist < arriveRadius)
         {
             speed = 0.0f;
+
+            if (context.action.TryRun(0))
+            { 
+                return; 
+            }
         }
 
         context.movement.SetTargetMoveDirection(toTarget);
-        context.movement.SetTargetAimDirection(toTarget);
-        context.movement.SetTargetMoveSpeed(speed);
+        context.movement.SetTargetMoveSpeed(speed * Mathf.Clamp01(alignedWithTarget));
     }
 
     void UpdateSegments()
@@ -122,18 +177,32 @@ public class CentipedeController : MonoBehaviour
 
         for (int i = 1; i < segmentCount; i++)
         {
-            Vector2 dir = -segmentTransforms[i-1].right;
-            Vector2 newPos = pos[i-1] + dir * maxSegmentLength * tightnessMultipliers[i];
+            Quaternion rotation = Quaternion.Slerp(segmentTransforms[i - 1].rotation, segmentTransforms[i].rotation, damping );
 
-            Debug.DrawLine(pos[i - 1], newPos);
-            Quaternion rotation = Quaternion.Slerp(segmentTransforms[i - 1].rotation, segmentTransforms[i].rotation, damping);
+            float length = Mathf.Lerp(tightLength, looseLength, looseMultiplier[i - 1]);
+
+            Vector2 dir = -segmentTransforms[i - 1].right;
+            Vector2 newPos = pos[i - 1] + dir * length;
 
             segmentTransforms[i].Translate(newPos - pos[i], Space.World);
-            segmentTransforms[i].rotation = rotation;
 
             prevPos[i] = pos[i];
             pos[i] = segmentTransforms[i].position;
+            segmentTransforms[i].rotation = rotation;
         }
+    }
+
+    void FluctuateTightness()
+    {
+        for (int i = 0; i < segmentCount; i++)
+        {
+            looseMultiplier[i] = Mathf.Sin(Time.time + i);
+        }
+    }
+
+    void OnStartDying()
+    {
+        isDying = true;
     }
 }
 

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerAction0 : ActionBehavior
 {
+    [Header("Primary Attack")]
     public float attackDuration;
 
     public Renderer attackRenderer;

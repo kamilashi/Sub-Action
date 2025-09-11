@@ -6,6 +6,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Collider2D))]
 public class HitReceiver : MonoBehaviour
 {
+    public int entityId;
 
     public UnityEvent<int> onBodyHit = new UnityEvent<int>();
 
@@ -13,12 +14,12 @@ public class HitReceiver : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject == this.gameObject)
+        HitEmitter hitEmitter = other.GetComponent<HitEmitter>();
+
+        if (hitEmitter.entityId == entityId)
         {
             return;
         }
-
-        HitEmitter hitEmitter = other.GetComponent<HitEmitter>();
 
         onBodyHit?.Invoke(hitEmitter.damage);
 
@@ -27,6 +28,11 @@ public class HitReceiver : MonoBehaviour
             Coroutine coroutine = StartCoroutine(DamageOverTimeCoroutine(hitEmitter.damage));
             DOTs[other] = coroutine;
         }
+
+ /*       if(hitEmitter.attachOnContact)
+        {
+
+        }*/
 
         Debug.Log("Hit!");
     }
