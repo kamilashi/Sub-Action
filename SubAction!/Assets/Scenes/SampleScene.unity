@@ -516,6 +516,12 @@ MonoBehaviour:
   damage: 1
   isDamageOverTime: 0
   attachOnContact: 0
+--- !u!23 &487749887 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4435299872040193254, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
+    type: 3}
+  m_PrefabInstance: {fileID: 1757604977}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &809456462 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 751750162044124740, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
@@ -543,6 +549,7 @@ MonoBehaviour:
   hitEmitter: {fileID: 435399444}
   id: 0
   context: {fileID: 1261677722}
+  attackRenderer: {fileID: 487749887}
   controller: {fileID: 1261677716}
   anticipationDuration: 1
   attackDuration: 0.2
@@ -1445,7 +1452,7 @@ PrefabInstance:
     - target: {fileID: 1896095320682041855, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2693337305969468025, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
         type: 3}
@@ -1490,6 +1497,11 @@ PrefabInstance:
     - target: {fileID: 3945842472749043316, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
         type: 3}
       propertyPath: m_GravityScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435299872040193254, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4611422242401305940, guid: 8ef87a6ee81d2a544a8628ea526e9edb,

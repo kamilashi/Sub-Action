@@ -453,7 +453,7 @@ MonoBehaviour:
     minDamageRef: 1
     minDamageRumble:
       duration: 1
-      maxRollDeg: 1
+      maxRollDeg: 3
   currencySensor: {fileID: 6167162917236591453}
 --- !u!114 &-6540944921526924894
 MonoBehaviour:

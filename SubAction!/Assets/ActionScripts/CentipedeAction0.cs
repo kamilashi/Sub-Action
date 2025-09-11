@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
+using static UnityEngine.Rendering.DebugUI;
 
 public class CentipedeAction0 : ActionBehavior
 {
     [Header("Lunge Attack")]
+    public Renderer attackRenderer;
     public CentipedeController controller;
     public float anticipationDuration = 1.0f;
     public float attackDuration = 0.5f;
@@ -15,6 +17,8 @@ public class CentipedeAction0 : ActionBehavior
     public float elongateMultiplier = 1.5f;
     public float shrinkMultiplier = 0.5f;
     public float cooldownDuration = 2.0f;
+
+    private MaterialPropertyBlock mpb;
 
     public void OnEnable()
     {
@@ -64,6 +68,13 @@ public class CentipedeAction0 : ActionBehavior
         context.movement.ForceAimDirection (facing);
         context.movement.ForceMoveDirection (facing);
 
+        mpb = new MaterialPropertyBlock();
+        attackRenderer.GetPropertyBlock(mpb);
+
+        mpb.SetFloat("_Progress1", 1.0f);
+        attackRenderer.SetPropertyBlock(mpb);
+        attackRenderer.enabled = true;
+
         hitEmitter.gameObject.SetActive(true);
         time = 0.0f;
         while (time < attackDuration)
@@ -77,6 +88,9 @@ public class CentipedeAction0 : ActionBehavior
         }
         hitEmitter.gameObject.SetActive(false);
 
+        attackRenderer.enabled = false;
+        mpb.SetFloat("_Progress1", 0.0f);
+        attackRenderer.SetPropertyBlock(mpb);
 
         time = 0.0f;
         context.movement.SetTargetMoveSpeed(0.0f);
@@ -92,7 +106,6 @@ public class CentipedeAction0 : ActionBehavior
 
             yield return null;
         }
-
 
         controller.damping = initialDamping;
 
