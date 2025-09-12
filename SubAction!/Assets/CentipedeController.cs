@@ -5,7 +5,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Windows;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 using static UnityEngine.GraphicsBuffer;
+using static UnityEngine.UI.Image;
 
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -21,10 +23,15 @@ public class CentipedeController : MonoBehaviour
 
     [Header("Movement")]
     public Transform target;                      
-    public Vector2 targetPosition;                      
+    public Vector2 targetPosition;                            
     public float arriveRadius = 2.0f;
+
+    public float wanderSpeedScale = 0.5f;
+    public float wanderChargeSpeed = 20.0f;
     public float wanderTargetPositionMinDistance = 5.0f;
     public float wanderTargetPositionMaxDistance = 15.0f;
+
+    public float attackChargeSpeed = 40.0f;
 
     [Header("Simulation")]
     public float tightLength = 0.4f;
@@ -36,7 +43,7 @@ public class CentipedeController : MonoBehaviour
     [Header("Debug")]
     public bool isSteering;
     public bool isDying;
-    public bool wanderPositionReached;
+    public bool isWandering;
     public float alignedWithTarget = 0.0f;
 
     private Rigidbody2D headBody;
@@ -72,12 +79,14 @@ public class CentipedeController : MonoBehaviour
             {
                 context.action.activeAction.StopAllCoroutines();
             }
-
+            
             return;
         }
 
         ActionBehavior attack = context.action.activeAction;
         alignedWithTarget = 1.0f;
+        isSteering = false;
+        isWandering = false;
 
         target = null;
 
@@ -85,27 +94,25 @@ public class CentipedeController : MonoBehaviour
         {
             target = steering.target;
             targetPosition = target.position;
-        }
-        else //if(wanderPositionReached)
-        {
-            targetPosition = this.transform.position;
-           // targetPosition = Library.Misc.GetRandomRadialPosition(wanderTargetPositionMinDistance, wanderTargetPositionMaxDistance, transform.position);
-        }
 
-        if (attack == null || !attack.isRunning)
-        {
-            //SteerHead();
-
-            //FluctuateTightness();
-
-            if (!context.action.TryRun(1))
+            if (attack == null || !attack.isRunning)
             {
-                SteerHead(targetPosition);
+                if (!context.action.TryRun(1))
+                {
+                    SteerToTarget(targetPosition);
+                    isSteering = true;
+                }
+                else
+                {
+                    SetChargeSpeed(attackChargeSpeed);
+                }
             }
-
-            isSteering = true;
         }
-        isSteering = false;
+        else 
+        {
+            isWandering = true;
+            Wander();
+        }
 
         UpdateSegments();
     }
@@ -164,9 +171,12 @@ public class CentipedeController : MonoBehaviour
         }
     }
 
-    void SteerHead(Vector3 targetPosition)
+    void SteerToTarget(Vector3 targetPosition)
     {
-        if (!target || !headBody) return;
+        if (target == null) 
+        { 
+            return;
+        }
 
         Vector2 toTarget = (Vector2)(targetPosition - headBody.transform.position);
         float dist = toTarget.magnitude;
@@ -177,11 +187,9 @@ public class CentipedeController : MonoBehaviour
         // wait until aligned
         alignedWithTarget = Vector2.Dot(toTarget, headBody.transform.right);
 
-        float speed = context.attributes.movement.maxSpeed;
-
-        if (dist < arriveRadius && target != null)
+        if (dist < arriveRadius)
         {
-            speed = 0.0f;
+            context.movement.SetTargetMoveSpeed(0.0f);
 
             if (context.action.TryRun(0))
             { 
@@ -189,8 +197,34 @@ public class CentipedeController : MonoBehaviour
             }
         }
 
+        float speed = context.attributes.movement.maxSpeed;
         context.movement.SetTargetMoveDirection(toTarget);
         context.movement.SetTargetMoveSpeed(speed * Mathf.Clamp01(alignedWithTarget));
+    }
+
+    void Wander()
+    {
+        if ( context.action.activeAction != null && context.action.activeAction.isRunning)
+        {
+            return;
+        }
+
+        Vector2 toTarget = (targetPosition - (Vector2)headBody.transform.position);
+        float dist = toTarget.magnitude;
+        toTarget = toTarget.normalized;
+        float speed = context.attributes.movement.maxSpeed;
+        context.movement.SetTargetMoveSpeed(speed * wanderSpeedScale);
+
+        if (dist < arriveRadius)
+        {
+            targetPosition = Library.Misc.GetRandomRadialPosition(wanderTargetPositionMinDistance, wanderTargetPositionMaxDistance, transform.position);
+            context.movement.SetTargetMoveSpeed(0.0f);
+        }
+        else if(context.action.TryRun(1))
+        {
+            SetChargeSpeed(wanderChargeSpeed);
+            return;
+        }
     }
 
     void UpdateSegments()
@@ -234,6 +268,11 @@ public class CentipedeController : MonoBehaviour
     void OnStartDying()
     {
         isDying = true;
+    }
+    void SetChargeSpeed(float speed)
+    {
+        CentipedeAction1 chargeAction = (CentipedeAction1)context.action.actions[1];
+        chargeAction.maxSpeed = speed;
     }
 }
 

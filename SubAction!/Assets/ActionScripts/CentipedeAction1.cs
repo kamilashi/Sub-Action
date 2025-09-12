@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
@@ -12,7 +13,7 @@ public class CentipedeAction1 : ActionBehavior
     public CentipedeController controller;
     public float frequencyHzMax = 1.5f;
     public float anticipationDuration = 1.0f;
-    public float maxSpeed = 50.0f;
+    public float maxSpeed = 40.0f;
     public float maxOscillationAngleDeg = 20.0f;
     public float frequencyHzMin = 0.5f;
     public float chargeDuration = 0.5f;
