@@ -6,7 +6,7 @@ SubAction!/.utmp/
 SubAction!/[Ll]ibrary/
 SubAction!/[Tt]emp/
 SubAction!/[Oo]bj/
-SubAction!/[Bb]uild/
+#SubAction!/[Bb]uild/
 SubAction!/[Bb]uilds/
 SubAction!/[Ll]ogs/
 SubAction!/[Uu]ser[Ss]ettings/
