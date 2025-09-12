@@ -54,7 +54,7 @@ public class CentipedeAction0 : ActionBehavior
 
             context.movement.SetTargetMoveSpeed(Library.SmoothingFuncitons.EaseOutCubic(maxBackoffSpeed * (regress)));
             context.movement.SetTargetMoveDirection(-context.rigidBody.transform.right);
-            Vector2 toTarget = (controller.target.position - context.rigidBody.transform.position);
+            Vector2 toTarget = (controller.targetPosition - (Vector2)context.rigidBody.transform.position);
             context.movement.SetTargetAimDirection(toTarget.normalized);
 
             yield return null;

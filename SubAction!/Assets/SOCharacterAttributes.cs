@@ -8,4 +8,5 @@ public class SOCharacterAttributes : ScriptableObject
     public Movement movement;
     public Health health; 
     public VisualizerData visualizer;
+    public int rank;
 }

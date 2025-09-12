@@ -6,6 +6,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public LayerMask attractorLayers;
+    public LayerMask sensorLayers;
+    //public LayerMask collectibleLayers;
+
     public GameObject currencyPrefab;
 
     void Awake()

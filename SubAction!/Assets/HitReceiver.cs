@@ -29,11 +29,6 @@ public class HitReceiver : MonoBehaviour
             DOTs[other] = coroutine;
         }
 
- /*       if(hitEmitter.attachOnContact)
-        {
-
-        }*/
-
         Debug.Log("Hit!");
     }
 

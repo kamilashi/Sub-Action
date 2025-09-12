@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -70,6 +71,7 @@ namespace Library
             return new Vector3(Damp(a.x, b.x, lambdas.x, dt), Damp(a.y, b.y, lambdas.y, dt), Damp(a.z, b.z, lambdas.z, dt));
         }
 
+
         /// <summary>
         /// Based on magnitude
         /// </summary>
@@ -127,6 +129,39 @@ namespace Library
 
     public static class Misc
     {
+        public static List<T> TopBy<T>(IList<T> src, Func<T, float> sel)
+        {
+            var top = new List<T>();
+            if (src == null || src.Count == 0) return top;
+
+            float max = float.MinValue;
+            for (int i = 0; i < src.Count; i++)
+            {
+                float v = sel(src[i]);
+                if (v > max)
+                {
+                    max = v;
+                    top.Clear();
+                    top.Add(src[i]);
+                }
+                else if (Mathf.Approximately(v, max))
+                {
+                    top.Add(src[i]);
+                }
+            }
+            return top;
+        }
+
+        public static Vector3 GetRandomRadialPosition(float minDistance, float maxDistance, Vector3 origin)
+        {
+            float distance = UnityEngine.Random.Range(minDistance, maxDistance);
+            Vector2 dir2D = UnityEngine.Random.insideUnitCircle.normalized;
+            Vector3 flatDir = new Vector3(dir2D.x, dir2D.y, 0f);
+
+            Vector3 position = origin + flatDir * distance;
+            return position;
+        }
+
         public static float MinValue(float signedInput, float unsignedReference)
         {
             return Mathf.Sign(signedInput) * Mathf.Min(Mathf.Abs(signedInput), unsignedReference);

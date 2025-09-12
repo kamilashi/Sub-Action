@@ -15,6 +15,7 @@ public class CharacterContext : MonoBehaviour
 
     public List<HitReceiver> hitReceivers;
     public List<HitEmitter> hitEmitters;
+    public List<Sensor> sensors;
 
     public int entityId;
 
@@ -33,10 +34,11 @@ public class CharacterContext : MonoBehaviour
             rigidBody = GetComponent<Rigidbody2D>();
         }
 
-        visualizer = GetComponentInChildren<Visualizer>();
+        visualizer = GetComponentInChildren<Visualizer>(true);
 
-        hitReceivers = GetComponentsInChildren<HitReceiver>().ToList();
-        hitEmitters = GetComponentsInChildren<HitEmitter>().ToList();
+        hitReceivers = GetComponentsInChildren<HitReceiver>(true).ToList();
+        hitEmitters = GetComponentsInChildren<HitEmitter>(true).ToList();
+        sensors = GetComponentsInChildren<Sensor>(true).ToList();
 
         foreach (HitReceiver hitReceiver in hitReceivers)
         {
@@ -46,6 +48,12 @@ public class CharacterContext : MonoBehaviour
         foreach (HitEmitter hitEmitter in hitEmitters)
         {
             hitEmitter.entityId = entityId;
+        }
+
+        foreach(Sensor sensor in sensors)
+        {
+            sensor.entityId = entityId;
+            sensor.context = this;
         }
 
         Debug.Assert(hitReceivers.Count > 0);

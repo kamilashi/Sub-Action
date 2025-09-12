@@ -36,7 +36,7 @@ public class CentipedeAction1 : ActionBehavior
     {
         isRunning = true;
 
-        Vector2 moveDirection = (controller.target.position - context.rigidBody.transform.position);
+        Vector2 moveDirection = (controller.targetPosition - (Vector2)context.rigidBody.transform.position);
 
         context.movement.SetTargetMoveSpeed(maxSpeed);
 
@@ -71,7 +71,7 @@ public class CentipedeAction1 : ActionBehavior
 
             float angle = Mathf.Sin(time * 2f * Mathf.PI * freq) * maxOscillationAngleDeg;
 
-            moveDirection = (controller.target.position - context.rigidBody.transform.position);
+            moveDirection = (controller.targetPosition - (Vector2) (context.rigidBody.transform.position));
             float squareDistance = moveDirection.sqrMagnitude;
 
             if(squareDistance <= stopBeforeTargetDistance * stopBeforeTargetDistance)

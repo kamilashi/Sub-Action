@@ -25,6 +25,8 @@ public class EnemyDeath : MonoBehaviour
             onStartDying?.Invoke();
 
             context.visualizer.OnStartDying(Despawn);
+
+            context.movement.SetTargetMoveSpeed(0.0f); // should move into something more generic once player death is in
         }
     }
 
@@ -32,7 +34,6 @@ public class EnemyDeath : MonoBehaviour
     {
         for (int i = 0; i < rewardCurrencyAmount; i++)
         {
-            Debug.Log("Spawned!");
             GameObject collectible = Instantiate(GameManager.Instance.currencyPrefab, transform.position, Quaternion.identity);
             collectible.transform.parent = null;
         }

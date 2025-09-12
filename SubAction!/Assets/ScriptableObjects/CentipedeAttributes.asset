@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movement:
     acceleration: 30
-    turnSpeed: 10
+    turnSpeed: 5
     aimSpeed: 20
     maxSpeed: 5
   health:
-    maxHealth: 10
+    maxHealth: 30
   visualizer:
     mainColor: {r: 0.8301887, g: 0.72144, b: 0.36418653, a: 0}
+  rank: 5

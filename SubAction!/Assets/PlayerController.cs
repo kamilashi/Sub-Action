@@ -94,11 +94,13 @@ public class PlayerController : MonoBehaviour
         сontext.movement.SetTargetMoveSpeed(0.0f);
     }
 
-
     // this belongs in the upgrade manager / inventory
-    private void CollectCurrency(Collider2D other)
+    private void CollectCurrency(Collider2D other, Sensor otherSensor)
     {
-        AddCurrency(1);
+        if(otherSensor.GetComponent<Collectible>() != null) // hacky for now, need an enum or something
+        {
+            AddCurrency(1);
+        }
     }
     
     private void AddCurrency(int amount)

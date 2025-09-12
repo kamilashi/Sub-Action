@@ -64,6 +64,15 @@ public class Visualizer : MonoBehaviour
             renderer.SetPropertyBlock(visualizerMPB);
         }
     }
+    public void SetVec2PropertyInstance(string parameterName, Vector2 value)
+    {
+        foreach (Renderer renderer in bodyRenderers)
+        {
+            renderer.GetPropertyBlock(visualizerMPB);
+            visualizerMPB.SetVector(parameterName, value);
+            renderer.SetPropertyBlock(visualizerMPB);
+        }
+    }
 
     public void SetFloatPropertyCopy(string parameterName, float value)
     {

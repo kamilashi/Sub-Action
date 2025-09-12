@@ -4,20 +4,12 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using UnityEngine;
 
-[Serializable]
-public class Movement
-{
-    public float acceleration = 2.0f;
-    public float turnSpeed = 5.0f;
-    public float aimSpeed = 5.0f;
-    public float maxSpeed = 10.0f;
-}
-
 public class CharacterAttributes : MonoBehaviour
 {
     public SOCharacterAttributes startData;
     public Movement movement;
     public Health health;
+    public int rank;
 
     void Awake()
     {
@@ -34,5 +26,7 @@ public class CharacterAttributes : MonoBehaviour
         movement.maxSpeed = startData.movement.maxSpeed;
 
         health.maxHealth = startData.health.maxHealth;
+
+        rank = startData.rank;
     }
 }

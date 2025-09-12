@@ -19,7 +19,7 @@ public class Collectible : MonoBehaviour
         sensor.onSensorEnter.AddListener(GetCollected);
     }
 
-    private void GetCollected(Collider2D receiver)
+    private void GetCollected(Collider2D receiver, Sensor receiverSensor)
     {
         StartCoroutine(CollectedCoroutine(receiver.transform));
     }
@@ -37,7 +37,7 @@ public class Collectible : MonoBehaviour
 
     IEnumerator CollectedCoroutine(Transform receiver)
     {
-        const float stopDistance = 0.1f;  
+        const float stopDistance = 0.5f;  
         float speed = 0f;
 
         while (receiver != null)

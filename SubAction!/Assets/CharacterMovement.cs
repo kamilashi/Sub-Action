@@ -1,7 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public class Movement
+{
+    public float acceleration = 2.0f;
+    public float turnSpeed = 5.0f;
+    public float aimSpeed = 5.0f;
+    public float maxSpeed = 10.0f;
+}
 public class CharacterMovement : MonoBehaviour
 {
     CharacterContext context;
@@ -20,18 +29,18 @@ public class CharacterMovement : MonoBehaviour
         context = GetComponent<CharacterContext>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        currentMoveSpeed = Library.SmoothingFuncitons.ApproachReferenceLinear(currentMoveSpeed, targetMoveSpeed, context.attributes.movement.acceleration * Time.deltaTime);
-        currentMoveDirection = Library.SmoothingFuncitons.ApproachReferenceLinear(currentMoveDirection, targetMoveDirection, context.attributes.movement.turnSpeed * Time.deltaTime);
-        currentAimDirection = Library.SmoothingFuncitons.ApproachReferenceLinear(currentAimDirection, targetAimDirection, context.attributes.movement.aimSpeed * Time.deltaTime);
+        float timeStep = Time.fixedDeltaTime;
+        currentMoveSpeed = Library.SmoothingFuncitons.ApproachReferenceLinear(currentMoveSpeed, targetMoveSpeed, context.attributes.movement.acceleration * timeStep);
+        currentMoveDirection = Library.SmoothingFuncitons.ApproachReferenceLinear(currentMoveDirection, targetMoveDirection, context.attributes.movement.turnSpeed * timeStep);
+        currentAimDirection = Library.SmoothingFuncitons.ApproachReferenceLinear(currentAimDirection, targetAimDirection, context.attributes.movement.aimSpeed * timeStep);
 
-        context.rigidBody.velocity = currentMoveDirection * currentMoveSpeed;
+        context.rigidBody.MovePosition((Vector2)context.rigidBody.transform.position + currentMoveDirection * currentMoveSpeed * timeStep);
 
         float roll = Mathf.Atan2(currentAimDirection.y, currentAimDirection.x) * Mathf.Rad2Deg;
-        Quaternion targetRotation = Quaternion.AngleAxis(roll, Vector3.forward);
 
-        context.rigidBody.MoveRotation(targetRotation);
+        context.rigidBody.MoveRotation(roll);
     }
 
     public void SetTargetMoveDirection(Vector2 direction)
