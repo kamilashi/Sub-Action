@@ -23,7 +23,7 @@ public class EnemySteering : MonoBehaviour
         public Vector2 normalizedDirection;
     }
 
-    public float shyness = 1.0f; // how much we approach interest directions
+    [Min(0.01f)]public float shyness = 1.0f; // how much we approach interest directions
     public float fear = 1.0f; // how fast we repel from dangers
 
     public float maxGapDegForClusters = 20.0f;
@@ -174,9 +174,9 @@ public class EnemySteering : MonoBehaviour
     DirectionScore GetInterestScore(Vector3 position, int rank)
     {
         Vector2 direction = position - context.transform.position;
-        float squareDistance = (direction).sqrMagnitude;
+        float distance = (direction).magnitude;
 
-        float rawInterest = rank / squareDistance;
+        float rawInterest = rank / (distance * shyness);
 
         DirectionScore score = new DirectionScore();
         score.score = rawInterest;

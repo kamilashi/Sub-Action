@@ -873,6 +873,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8065756493397578201, guid: 0856af6c908310743b97efc1cc37a382,
+        type: 3}
+      propertyPath: damageResponce.minDamageRumble.maxRollDeg
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: -6540944921526924894, guid: 0856af6c908310743b97efc1cc37a382,
         type: 3}
       propertyPath: playerCamera
@@ -1548,7 +1553,7 @@ PrefabInstance:
     - target: {fileID: 2409296815109817774, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
         type: 3}
       propertyPath: shyness
-      value: 0
+      value: 0.26
       objectReference: {fileID: 0}
     - target: {fileID: 2693337305969468025, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
         type: 3}
@@ -1693,7 +1698,7 @@ PrefabInstance:
     - target: {fileID: 1910102019210562385, guid: a670f581e98a54b448f5f7feb8bb1588,
         type: 3}
       propertyPath: m_Name
-      value: FleamagPrefab
+      value: PopcornPrefab
       objectReference: {fileID: 0}
     - target: {fileID: 3182383603496238829, guid: a670f581e98a54b448f5f7feb8bb1588,
         type: 3}
