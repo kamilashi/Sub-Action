@@ -638,7 +638,7 @@ MonoBehaviour:
   chargeDuration: 1
   cooldownDuration: 0.5
   minDamping: 0.4
-  stopBeforeTargetDistance: 6
+  stopBeforeTargetDistance: 7
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
