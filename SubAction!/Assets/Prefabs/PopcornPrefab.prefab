@@ -106,7 +106,7 @@ PrefabInstance:
     - target: {fileID: 4611422242401305940, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
         type: 3}
       propertyPath: m_Name
-      value: FleamagPrefab
+      value: PopcornPrefab
       objectReference: {fileID: 0}
     - target: {fileID: 7005875993640636025, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
         type: 3}

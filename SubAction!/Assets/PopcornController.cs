@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-public class FleamagController : MonoBehaviour
+public class PopcornController : MonoBehaviour
 {
     CharacterContext context;
     EnemySteering steering;

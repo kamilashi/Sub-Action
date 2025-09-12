@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 647bb53852e9b7d41bfcca48ac4039fc, type: 3}
-  m_Name: FleamagAttributes
+  m_Name: PopcornAttributes
   m_EditorClassIdentifier: 
   movement:
     acceleration: 50

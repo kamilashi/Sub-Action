@@ -18,7 +18,7 @@ MonoBehaviour:
     aimSpeed: 20
     maxSpeed: 10
   health:
-    maxHealth: 20
+    maxHealth: 100
   visualizer:
     mainColor: {r: 0.29903883, g: 0.64123565, b: 0.9056604, a: 1}
   rank: 2

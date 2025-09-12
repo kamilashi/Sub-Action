@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Fleamag
+  m_Name: Popcorn
   m_Shader: {fileID: -6465566751694194690, guid: 05ed4d1003f2e654d92601d618e210a8,
     type: 3}
   m_Parent: {fileID: 0}
