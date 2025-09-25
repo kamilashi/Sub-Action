@@ -8,9 +8,7 @@ public class Sensor : MonoBehaviour
 {
     public int entityId;
     public CharacterContext context;
-/*
-    public UnityEvent<Collider2D, CharacterContext> onSensorEnterCreature = new UnityEvent<Collider2D, CharacterContext>();
-    public UnityEvent<Collider2D, CharacterContext> onSensorExitCreature = new UnityEvent<Collider2D, CharacterContext>();*/
+
     public UnityEvent<Collider2D, Sensor> onSensorEnter = new UnityEvent<Collider2D, Sensor>();
     public UnityEvent<Collider2D, Sensor> onSensorExit = new UnityEvent<Collider2D, Sensor>();
 
@@ -24,6 +22,7 @@ public class Sensor : MonoBehaviour
                 return;
             }
 
+            //Debug.Log(context.name + " sensor" + this.GetInstanceID() + ": sensed " + otherSensor.entityId);
             onSensorEnter?.Invoke(other, otherSensor);
         }
     }
@@ -38,6 +37,7 @@ public class Sensor : MonoBehaviour
                 return;
             }
 
+            //Debug.Log(context.name + " sensor" + this.GetInstanceID() + ": lost " + otherSensor.entityId);
             onSensorExit?.Invoke(other, otherSensor);
         }
     }

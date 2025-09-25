@@ -29,7 +29,7 @@ public class HitReceiver : MonoBehaviour
             DOTs[other] = coroutine;
         }
 
-        Debug.Log("Hit!");
+        //Debug.Log(entityId + " hit by " + hitEmitter.entityId);
     }
 
     private void OnTriggerExit2D(Collider2D other)

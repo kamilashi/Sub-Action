@@ -37,7 +37,7 @@ public class CharacterAction : MonoBehaviour
 
     public bool TryRun(int id)
     {
-        Debug.Log("run action");
+        //Debug.Log("run action");
 
         if (id >= actions.Count) 
         {

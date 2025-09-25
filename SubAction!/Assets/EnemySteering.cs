@@ -23,8 +23,9 @@ public class EnemySteering : MonoBehaviour
         public Vector2 normalizedDirection;
     }
 
-    [Min(0.01f)]public float shyness = 1.0f; // how much we approach interest directions
-    public float fear = 1.0f; // how fast we repel from dangers
+    [Min(0.01f)]public float distanceWeight = 1.0f; // how much distance matters when calculating score = rank / distance
+    [Min(0.01f)]public float rankWeight = 1.0f;     // how much rank matters when calculating score = rank / distance
+    public float fear = 1.0f;                       // how fast we repel from dangers
 
     public float maxGapDegForClusters = 20.0f;
 
@@ -33,8 +34,14 @@ public class EnemySteering : MonoBehaviour
     public Label targetLabel;
 
     public List<CharacterContext> sensedCreatures;
-    private HashSet<int> sensedCreatureIds;
+    public HashSet<int> sensedCreatureIds;
     CharacterContext context;
+
+#if UNITY_EDITOR
+    public static bool debugDrawAll = false;
+    //public static bool debugDrawClustersAll = true;
+    public bool debugDrawThis;
+#endif
 
     void Start()
     {
@@ -48,34 +55,41 @@ public class EnemySteering : MonoBehaviour
         sensedCreatureIds = new HashSet<int>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         ProcessCreatures();
     }
 
-    void OnNewCreatureSensed(Collider2D collider, Sensor other)
+    void OnNewCreatureSensed(Collider2D otherCollider, Sensor otherSensor)
     {
-        if( ((1 << collider.gameObject.layer) & GameManager.Instance.attractorLayers) == 0)
+        if ( ((1 << otherCollider.gameObject.layer) & GameManager.Instance.attractorLayers) == 0)
         {
             return;
         }
 
-        int id = other.entityId;
+        int id = otherSensor.entityId;
         if (!sensedCreatureIds.Contains(id))
         {
-            sensedCreatures.Add(other.context);
+            sensedCreatures.Add(otherSensor.context);
             sensedCreatureIds.Add(id);
+            //Debug.Log(this.name  + ": added " + (1 << otherCollider.gameObject.layer) + id);
         }
     }
 
-    void OnCreatureLost(Collider2D collider, Sensor other)
+    void OnCreatureLost(Collider2D otherCollider, Sensor otherSensor)
     {
-        int id = other.entityId;
+        
+        if (((1 << otherCollider.gameObject.layer) & GameManager.Instance.attractorLayers) == 0)
+        {
+            return;
+        }
+
+        int id = otherSensor.entityId;
         if (sensedCreatureIds.Contains(id))
         {
             sensedCreatureIds.Remove(id);
-            sensedCreatures.Remove(other.context);
+            sensedCreatures.Remove(otherSensor.context);
+            //Debug.Log(this.name + ": removed " + (1 << otherCollider.gameObject.layer) + id);
         }
     }
 
@@ -108,7 +122,7 @@ public class EnemySteering : MonoBehaviour
             // else flocking, or ignore
         }
 
-        Func < List<List<int>>, List<ScoreInputData>, List<DirectionScore>> processClusters = (clusters, scores) =>
+        Func < List<List<int>>, List<ScoreInputData>, Color, List<DirectionScore>> processClusters = (clusters, scores, debugColor) =>
         {
             List<DirectionScore> processedScores = new List<DirectionScore>();
 
@@ -129,17 +143,24 @@ public class EnemySteering : MonoBehaviour
 
                 averagePosition /= cluster.Count;
 
-                processedScores.Add(GetInterestScore(averagePosition, totalRank));
+                processedScores.Add(GetRawScore(averagePosition, totalRank));
+
+#if UNITY_EDITOR
+                if ((debugDrawAll || debugDrawThis)/* && debugDrawClustersAll */)
+                {
+                    DebugRenderer.DrawLine(transform.position, averagePosition, transform.position.z, debugColor);
+                }
+#endif
             }
 
             return processedScores;
         };
 
         List<List<int>> directionClusters = AngleToleranceCluster.ClusterByMaxGap(transform.position, interestList, maxGapDegForClusters);
-        List<DirectionScore> interestScores = processClusters(directionClusters, interestList);
+        List<DirectionScore> interestScores = processClusters(directionClusters, interestList, Color.green);
 
         directionClusters = AngleToleranceCluster.ClusterByMaxGap(transform.position, dangerList, maxGapDegForClusters);
-        List<DirectionScore> dangerScores = processClusters(directionClusters, dangerList);
+        List<DirectionScore> dangerScores = processClusters(directionClusters, dangerList, Color.red);
 
         List<DirectionScore> topInterest = Library.Misc.TopBy(interestScores, t => t.score);
         List<DirectionScore> topDanger = Library.Misc.TopBy(dangerScores, t => t.score);
@@ -171,15 +192,16 @@ public class EnemySteering : MonoBehaviour
         }
     }
 
-    DirectionScore GetInterestScore(Vector3 position, int rank)
+    DirectionScore GetRawScore(Vector3 position, int rank)
     {
         Vector2 direction = position - context.transform.position;
         float distance = (direction).magnitude;
 
-        float rawInterest = rank / (distance * shyness);
+        // might need to have different weights for interest and danger cases
+        float rawScore = (rank * rankWeight) / (distance * distanceWeight);
 
         DirectionScore score = new DirectionScore();
-        score.score = rawInterest;
+        score.score = rawScore;
         score.targetPosition = position;
         score.normalizedDirection = direction.normalized;
 
