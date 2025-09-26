@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 57770480}
   - component: {fileID: 57770479}
   m_Layer: 0
-  m_Name: Popcorn
+  m_Name: PopcornSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -151,12 +151,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83346116c2cb6bd4899cf9a307bda9e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 1910102019210562385, guid: a670f581e98a54b448f5f7feb8bb1588,
-    type: 3}
-  amount: 5
   minDistance: 2
   maxDistance: 7
   spawnerIsParent: 1
+  prefabsToSpawn:
+  - prefab: {fileID: 1910102019210562385, guid: a670f581e98a54b448f5f7feb8bb1588,
+      type: 3}
+    count: 5
 --- !u!4 &57770480
 Transform:
   m_ObjectHideFlags: 0
@@ -1238,6 +1239,60 @@ MeshRenderer:
     type: 3}
   m_PrefabInstance: {fileID: 1757604977}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1488235677
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1488235679}
+  - component: {fileID: 1488235678}
+  m_Layer: 0
+  m_Name: StingraysSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1488235678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1488235677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83346116c2cb6bd4899cf9a307bda9e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minDistance: 2
+  maxDistance: 7
+  spawnerIsParent: 1
+  prefabsToSpawn:
+  - prefab: {fileID: 2007066514927562003, guid: 4ab1a41bc686b95469ed836992ad55a5,
+      type: 3}
+    count: 35
+  - prefab: {fileID: 4514739805341459222, guid: 8ca044d4a86375647bbc3ee39847561f,
+      type: 3}
+    count: 0
+--- !u!4 &1488235679
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1488235677}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.15, y: 7.88, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1493480193
 GameObject:
   m_ObjectHideFlags: 0
@@ -1488,12 +1543,12 @@ PrefabInstance:
     - target: {fileID: 1582674085873210725, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.55
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 1582674085873210725, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.89
+      value: 30.1
       objectReference: {fileID: 0}
     - target: {fileID: 1582674085873210725, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
         type: 3}
@@ -1623,7 +1678,7 @@ PrefabInstance:
     - target: {fileID: 4611422242401305940, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5167066737828963682, guid: 8ef87a6ee81d2a544a8628ea526e9edb,
         type: 3}
@@ -1932,5 +1987,6 @@ SceneRoots:
   - {fileID: 951308396}
   - {fileID: 1757604977}
   - {fileID: 57770480}
+  - {fileID: 1488235679}
   - {fileID: 1039468744}
   - {fileID: 1969257347}

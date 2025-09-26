@@ -13,8 +13,8 @@ public class PopcornController : MonoBehaviour
     public float stopDistance;
     public float movementOscillationFreq = 0.1f;
     public float movementOscillationAmpl = 1.0f;
-    public float idleOscillationFreq = 0.5f;
-    public float idleOscillationAmpl = 0.7f;
+    public float idleOscillationFreq = 0.3f;
+    public float idleOscillationAmpl = 0.09f;
 
     void Start()
     {

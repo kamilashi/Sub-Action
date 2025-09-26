@@ -13,6 +13,11 @@ public struct ScoreInputData
     public Vector2 position;
     public int rank;
 }
+public struct FlockingInputData
+{
+    public Vector2 position;
+    public Vector2 direction;
+}
 
 public class EnemySteering : MonoBehaviour
 {
@@ -23,23 +28,37 @@ public class EnemySteering : MonoBehaviour
         public Vector2 normalizedDirection;
     }
 
+    [Header("Detection")]
+    public float maxGapDegForClusters = 20.0f;
+
+    [Header("Chasing / Fleeing")]
     [Min(0.01f)]public float distanceWeight = 1.0f; // how much distance matters when calculating score = rank / distance
     [Min(0.01f)]public float rankWeight = 1.0f;     // how much rank matters when calculating score = rank / distance
     public float fear = 1.0f;                       // how fast we repel from dangers
 
-    public float maxGapDegForClusters = 20.0f;
+    [Header("Flocking")]
+    [Range(0, 1000)] public float separationSpeed;
+    [Min(0.1f)] public float separationSubRadius = 1.0f;
+    [Range(0, 1000)] public float alignmentSpeed;
+    [Min(0.1f)] public float alignmentSubRadius = 1.0f;
+    [Range(0, 1000)] public float cohernceSpeed;
+    [Min(0.1f)] public float cohernceSubRadius = 1.0f;
 
+    [Header("Output")]
     public Transform target;
     public bool hasTarget;
     public Label targetLabel;
+    public Vector2 steeringDirectionRaw; // just flocking for now
+    public bool hasSteeringDirection;
 
     public List<CharacterContext> sensedCreatures;
-    public HashSet<int> sensedCreatureIds;
+    HashSet<int> sensedCreatureIds;
     CharacterContext context;
 
 #if UNITY_EDITOR
     public static bool debugDrawAll = false;
-    //public static bool debugDrawClustersAll = true;
+    public static bool debugDrawClustersAll = false;
+    public static bool debugDrawFlockingAll = true;
     public bool debugDrawThis;
 #endif
 
@@ -105,6 +124,8 @@ public class EnemySteering : MonoBehaviour
 
         List<ScoreInputData> interestList = new List<ScoreInputData>();
         List<ScoreInputData> dangerList = new List<ScoreInputData>();
+        List<FlockingInputData> flockingList = new List<FlockingInputData>();
+
         foreach (CharacterContext creature in sensedCreatures)
         {
             ScoreInputData scoreInput = new ScoreInputData();
@@ -119,8 +140,16 @@ public class EnemySteering : MonoBehaviour
             {
                 interestList.Add(scoreInput);
             }
-            // else flocking, or ignore
+            else
+            {
+                FlockingInputData flockingInput = new FlockingInputData();
+                flockingInput.position = creature.transform.position;
+                flockingInput.direction = creature.movement.targetMoveDirection;
+                flockingList.Add(flockingInput);
+            }
         }
+
+        ProcessFlocking(flockingList);
 
         Func < List<List<int>>, List<ScoreInputData>, Color, List<DirectionScore>> processClusters = (clusters, scores, debugColor) =>
         {
@@ -146,7 +175,7 @@ public class EnemySteering : MonoBehaviour
                 processedScores.Add(GetRawScore(averagePosition, totalRank));
 
 #if UNITY_EDITOR
-                if ((debugDrawAll || debugDrawThis)/* && debugDrawClustersAll */)
+                if ((debugDrawAll || debugDrawThis) && debugDrawClustersAll)
                 {
                     DebugRenderer.DrawLine(transform.position, averagePosition, transform.position.z, debugColor);
                 }
@@ -206,6 +235,82 @@ public class EnemySteering : MonoBehaviour
         score.normalizedDirection = direction.normalized;
 
         return score;
+    }
+
+    void ProcessFlocking(List<FlockingInputData> otherBoids)
+    {
+        if(otherBoids.Count != 0)
+        {
+            Vector2 thisPosition = (Vector2)transform.position;
+            Vector2 result = Vector2.zero;
+
+            Vector2 separation = Vector2.zero;
+            Vector2 alignment = Vector2.zero;
+            Vector2 coherence = Vector2.zero;
+
+            float avgDistance = 0.0f;
+            float closestDistance = float.MaxValue;
+            int count = otherBoids.Count;
+            int coherenceCount = 0;
+
+            foreach (FlockingInputData neighbor in otherBoids)
+            {
+                Vector2 fromNeightbor = thisPosition - neighbor.position;
+                float distance = fromNeightbor.magnitude;
+
+                float sepFactor = separationSubRadius / Mathf.Max(distance, 0.1f); // separate from closest 
+                sepFactor *= sepFactor;
+                separation += (fromNeightbor).normalized * sepFactor;
+
+                coherenceCount++;
+                coherence += neighbor.position;
+
+                float alignmentFactor = alignmentSubRadius / Mathf.Max(distance, 0.1f); // align with closest 
+                alignmentFactor *= alignmentFactor;
+                alignment += neighbor.direction * alignmentFactor;
+
+                avgDistance += distance;
+                closestDistance = Mathf.Min(closestDistance, distance);
+            }
+
+            avgDistance /= count;
+
+            separation /= count;
+            if (separation.sqrMagnitude > 1) separation.Normalize();
+
+            coherence /= count;
+            coherence -= thisPosition;
+            if(coherence.sqrMagnitude > 1) coherence.Normalize();
+
+            alignment /= count;
+            if (alignment.sqrMagnitude > 1) alignment.Normalize();
+
+            float coherenceFactor = (1.0f - closestDistance / cohernceSubRadius);
+            coherenceFactor *= coherenceFactor;
+
+            result = (separation * separationSpeed 
+                    + alignment * alignmentSpeed 
+                    + coherence * cohernceSpeed * coherenceFactor) * Time.deltaTime;
+
+            if(result.magnitude > 0.0f)
+            {
+                //result.Normalize();
+#if UNITY_EDITOR
+                if ((debugDrawAll || debugDrawThis) && debugDrawFlockingAll)
+                {
+                    DebugRenderer.DrawLine(thisPosition, thisPosition + separation * separationSpeed * Time.deltaTime, transform.position.z, Color.red);
+                    DebugRenderer.DrawLine(thisPosition, thisPosition + alignment * alignmentSpeed * Time.deltaTime, transform.position.z, Color.yellow);
+                    DebugRenderer.DrawLine(thisPosition, thisPosition + coherence * cohernceSpeed * Time.deltaTime, transform.position.z, Color.cyan);
+                }
+#endif
+                hasSteeringDirection = true;
+                steeringDirectionRaw = result;
+                return;
+            }
+        }
+
+        hasSteeringDirection = false;
+        steeringDirectionRaw = Vector3.zero;
     }
 
     bool IsInterestFit(ref Vector2 fitPosition, DirectionScore interest, DirectionScore danger, float maxAlignment)
